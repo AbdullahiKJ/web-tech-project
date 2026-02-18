@@ -1,5 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import {
+    BookOpen,
+    Folder,
+    Menu,
+    Search,
+    CircleUser,
+    Clock,
+    Star,
+} from 'lucide-react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -34,7 +42,7 @@ import { cn, toUrl } from '@/lib/utils';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-import { dashboard } from '@/routes';
+import { dashboard, home } from '@/routes';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -42,9 +50,19 @@ type Props = {
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Featured',
+        href: home(),
+        icon: Star,
+    },
+    {
+        title: 'Upcoming',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: Clock,
+    },
+    {
+        title: 'Profile',
+        href: dashboard(),
+        icon: CircleUser,
     },
 ];
 
