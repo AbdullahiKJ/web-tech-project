@@ -9,6 +9,7 @@ export default function MovieModal(props: Props) {
     return (
         <div>
             {/* Button/Image trigger for the modal */}
+            {/* todo: make modal id generic */}
             <button
                 type="button"
                 onClick={() =>
@@ -24,6 +25,7 @@ export default function MovieModal(props: Props) {
                 />
             </button>
             {/* Modal */}
+            {/* todo: make modal id generic */}
             <dialog className="modal" id="exampleModal">
                 <div className="modal-box grid h-10/12 max-w-6xl grid-cols-6 gap-10">
                     {/* Image and Buttons */}
