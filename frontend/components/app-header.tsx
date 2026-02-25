@@ -71,12 +71,12 @@ export function AppHeader() {
                                 <Search className="size-5! opacity-80 group-hover:opacity-100" />
                             </button>
                             <div className="ml-1 hidden gap-1 lg:flex">
-                                {rightNavItems.map((item) => (
-            
+                                {rightNavItems.map((item, index) => (
                                                 <a
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="group inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium text-accent-foreground ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                                                    key={index}
                                                 >
                                                     <span className="sr-only">
                                                         {item.title}

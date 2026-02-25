@@ -1,3 +1,4 @@
+'use client';
 import Review from '@/components/review';
 import Rating from '@/components/rating';
 

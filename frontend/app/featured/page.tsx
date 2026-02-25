@@ -1,16 +1,16 @@
 import MovieModal from '@/components/movie-modal';
 import { ReactElement } from 'react';
-import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { home } from '@/routes';
+// import { Head } from '@inertiajs/react';
+// import AppLayout from '@/layouts/app-layout';
+// import type { BreadcrumbItem } from '@/types';
+// import { home } from '@/routes';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Featured',
-        href: home().url,
-    },
-];
+// const breadcrumbs: BreadcrumbItem[] = [
+//     {
+//         title: 'Featured',
+//         href: home().url,
+//     },
+// ];
 
 const rowCount: number = 3;
 const colCount: number = 5;
@@ -42,12 +42,12 @@ for (let i = 0; i < rowCount; i++) {
 
 export default function Home() {
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Featured" />
-            <main className="flex flex-col items-center justify-between px-8 py-8">
+        // <AppLayout breadcrumbs={breadcrumbs}>
+        // {/* <Head title="Featured" /> */}
+        // </AppLayout>
+        <main className="flex flex-col items-center justify-between px-8 py-8">
                 <MovieModal imageSrc={2} />
                 <div className="flex flex-col">{rows}</div>
-            </main>
-        </AppLayout>
+        </main>
     );
 }
