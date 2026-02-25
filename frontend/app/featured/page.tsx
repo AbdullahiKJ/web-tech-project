@@ -12,6 +12,7 @@ import { ReactElement } from 'react';
 //     },
 // ];
 
+export default async function Home() {
 const rowCount: number = 3;
 const colCount: number = 5;
 
@@ -40,14 +41,19 @@ for (let i = 0; i < rowCount; i++) {
     );
 }
 
-export default function Home() {
-    return (
-        // <AppLayout breadcrumbs={breadcrumbs}>
-        // {/* <Head title="Featured" /> */}
-        // </AppLayout>
-        <main className="flex flex-col items-center justify-between px-8 py-8">
-                <MovieModal imageSrc={2} />
-                <div className="flex flex-col">{rows}</div>
-        </main>
-    );
+// Get popular movies from tmdb
+let data = await fetch('https://api.vercel.app/blog');
+let posts = await data.json();
+console.log(posts);
+
+return (
+    // <AppLayout breadcrumbs={breadcrumbs}>
+    // {/* <Head title="Featured" /> */}
+    // </AppLayout>
+    <main className="flex flex-col items-center justify-between px-8 py-8">
+        {posts}
+        <MovieModal imageSrc={2} />
+        <div className="flex flex-col">{rows}</div>
+    </main>
+);
 }
