@@ -1,59 +1,27 @@
 import MovieModal from '@/components/movie-modal';
-import { ReactElement } from 'react';
-// import { Head } from '@inertiajs/react';
-// import AppLayout from '@/layouts/app-layout';
-// import type { BreadcrumbItem } from '@/types';
-// import { home } from '@/routes';
-
-// const breadcrumbs: BreadcrumbItem[] = [
-//     {
-//         title: 'Featured',
-//         href: home().url,
-//     },
-// ];
 
 export default async function Home() {
-const rowCount: number = 3;
-const colCount: number = 5;
+    // Get popular movies from the TMDB API
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer ' + process.env.TMDB_AUTH
+        }
+    }
+    let data = await fetch('https://api.themoviedb.org/3/movie/popular', options);
+    let response = await data.json();
+    let popularMovies = response.results;
+    console.log(popularMovies);
 
-const rows: ReactElement[] = [];
-const cols: ReactElement[] = [];
-const imageCount = 3;
 
-for (let i = 0; i < colCount; i++) {
-    let image = Math.floor(Math.random() * imageCount) + 1;
-    cols.push(
-        <img
-            className="rounded-xl"
-            src={`/poster${image}.jpg`}
-            alt={`Poster ${image}`}
-            width={225}
-            height={20}
-            key={i}
-        />,
+    return (
+        <main className="flex flex-col items-center justify-between px-8 py-8">
+            <div className="flex flex-wrap gap-5 py-4 justify-items-center">
+                {popularMovies.map((movie: any) => (
+                    <MovieModal key={movie.id} movie={movie}/>
+                ))}
+            </div>
+        </main>
     );
-}
-for (let i = 0; i < rowCount; i++) {
-    rows.push(
-        <div className="flex gap-5 py-4" key={i}>
-            {cols}
-        </div>,
-    );
-}
-
-// Get popular movies from tmdb
-let data = await fetch('https://api.vercel.app/blog');
-let posts = await data.json();
-console.log(posts);
-
-return (
-    // <AppLayout breadcrumbs={breadcrumbs}>
-    // {/* <Head title="Featured" /> */}
-    // </AppLayout>
-    <main className="flex flex-col items-center justify-between px-8 py-8">
-        {posts}
-        <MovieModal imageSrc={2} />
-        <div className="flex flex-col">{rows}</div>
-    </main>
-);
 }
