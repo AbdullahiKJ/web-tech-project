@@ -9,7 +9,7 @@ export default function Review() {
             {/* Review */}
             <div className="flex flex-col">
                 <p className="text-white">Lorem ipsum</p>
-                <Rating rating={4} size={2} />
+                <Rating rating={4} size={24} />
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 'use client';
 import Review from '@/components/review';
 import Rating from '@/components/rating';
+import React from 'react';
 
 interface Props {
     movie: MovieInfo;
@@ -16,6 +17,8 @@ interface MovieInfo {
 
 export default function MovieModal(props: Props) {
     const baseImgUrl: string = 'https://image.tmdb.org/t/p/original';
+    const [reviewing, setReveiwing] = React.useState(false);
+
     return (
         <div>
             {/* Button/Image trigger for the modal */}
@@ -45,7 +48,7 @@ export default function MovieModal(props: Props) {
                             width={250}
                             height={20}
                         />
-                        <button className="btn btn-outline">
+                        <button className="btn btn-outline" onClick={() => setReveiwing(true)}>
                             Leave a review
                         </button>
                         <button className="btn btn-outline">
@@ -53,25 +56,36 @@ export default function MovieModal(props: Props) {
                         </button>
                     </div>
                     {/* Description and reviews */}
-                    <div className="col-span-4 col-start-3 flex flex-col gap-10">
-                        <div>
-                            <p className="text-5xl text-white">{props.movie.title}</p>
-                            {/* Rating */}
-                            <Rating rating={props.movie.vote_average} size={1} />
-                            <p className="text-xl text-white">Synopsis</p>
-                        </div>
-                        <p className="text-white">{props.movie.overview}</p>
-                        {/* Reviews */}
-                        <div className="flex flex-col gap-3">
-                            <p className="text-xl text-white">Reviews</p>
-                            <Review />
-                            <Review />
-                            <Review />
-                        </div>
+                    <div className="col-span-4 col-start-3 flex flex-col gap-5">
+                        <p className="text-5xl text-white">{props.movie.title}</p>
+                        {/* Rating */}
+                        <Rating rating={props.movie.vote_average} size={48} />
+                        {!reviewing 
+                            ? (
+                            <div className="flex flex-col gap-5">
+                                <p className="text-xl text-white">Synopsis</p>
+                                <p className="text-white">{props.movie.overview}</p>
+                                {/* Reviews */}
+                                <div className="flex flex-col gap-3">
+                                    <p className="text-xl text-white">Reviews</p>
+                                    <Review />
+                                    <Review />
+                                    <Review />
+                                </div>
+                            </div>
+                            ) : (
+                                <div className="flex flex-col gap-5">
+                                    <p className='text-xl'>Review</p>
+                                    <form className='flex flex-col gap-5'>
+                                        <textarea className="textarea w-full min-h-85" placeholder="Write your review here..." />
+                                        <button className="btn btn-outline flex-none float-right">Submit</button>
+                                    </form>
+                                </div>
+                            )}
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
-                    <button></button>
+                    <button onClick={() => setReveiwing(false)}></button>
                 </form>
             </dialog>
         </div>

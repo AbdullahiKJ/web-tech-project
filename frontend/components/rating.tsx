@@ -17,7 +17,7 @@ export default function Rating(props: Props) {
     // Full stars
     for (let i = 0; i < fullStars; i++) {
         stars.push(
-            <Star className={`fs-${props.size} fill-white`} key={count} />,
+            <Star className="fill-white" key={count} size={props.size} />,
         );
         count++;
     }
@@ -25,7 +25,7 @@ export default function Rating(props: Props) {
     // Half stars
     for (let i = 0; i < halfStars; i++) {
         stars.push(
-            <StarHalf className={`fs-${props.size} fill-white`} key={count} />,
+            <StarHalf className="fill-white" key={count} size={props.size} />,
         );
         count++;
     }
@@ -33,7 +33,7 @@ export default function Rating(props: Props) {
     // Empty stars
     let leftovers = starCount - stars.length;
     for (let i = 0; i < leftovers; i++) {
-        stars.push(<Star className={`fs-${props.size}`} key={count} />);
+        stars.push(<Star key={count} size={props.size}/>);
         count++;
     }
     return <div className="flex">{stars}</div>;
