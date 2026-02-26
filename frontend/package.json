@@ -11,6 +11,7 @@
         "format:fix": "prettier --write --ignore-path .gitignore ."
     },
     "dependencies": {
+        "bcrypt": "^6.0.0",
         "lucide-react": "^0.575.0",
         "next": "16.1.6",
         "prettier": "^3.8.1",
