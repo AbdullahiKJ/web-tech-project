@@ -11,20 +11,24 @@ import Link from 'next/link';
 type NavItem = {
     title?: string;
     icon?: React.ElementType;
+    href?: string;
 };
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Featured',
         icon: Star,
+        href: '/featured',
     },
     {
         title: 'Upcoming',
         icon: Clock,
+        href: '/upcoming',
     },
     {
         title: 'Profile',
         icon: CircleUser,
+        href: '/profile',
     },
 ];
 
@@ -45,13 +49,13 @@ const activeItemStyles =
 export function AppHeader() {
     return (
         <>
-            <div className="border-b border-sidebar-border/80">
+            <div className="border-sidebar-border/80 bg-gray-950">
                 <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
                     {/* Desktop Navigation */}
                     <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
                                 {mainNavItems.map((item, index) => (
                                         <Link
-                                            href=""
+                                            href={item.href || "#"}
                                             className='h-9 cursor-pointer px-3 flex flex-row'
                                             key={index}
                                         >
