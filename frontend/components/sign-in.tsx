@@ -10,13 +10,13 @@ export default function SignIn() {
                     <form className="flex flex-col gap-2">
                         {/* Email */}
                         <label htmlFor="email" className="text-sm">Email</label>
-                        <input id="email" className="border rounded p-1 w-full" type="email"/>
+                        <input id="email" name="email" className="border rounded p-1 w-full" type="email"/>
                         {/* Password */}
                         <div>
                             <label htmlFor="password" className="text-sm">Password</label>
                             <Link href="/forgot-password" className="text-teal-700 text-sm float-right">Forgot password?</Link>
                         </div>
-                        <input id="password" className="border rounded p-1 w-full" type="password"/>
+                        <input id="password" name="password" className="border rounded p-1 w-full" type="password"/>
                         <button className="bg-white text-black text-sm rounded p-2 w-full mt-6">Continue</button>
                     </form>
                 </div>
