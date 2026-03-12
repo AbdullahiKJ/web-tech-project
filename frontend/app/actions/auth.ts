@@ -1,7 +1,7 @@
-import { SignupFormSchema, FormState } from "@/app/lib/definitions";
+import { SignupFormSchema, SignupFormState } from "@/app/lib/definitions";
 import * as z from 'zod';
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(state: SignupFormState, formData: FormData) {
 
     // Validate form fields
     const validatedFields = SignupFormSchema.safeParse({

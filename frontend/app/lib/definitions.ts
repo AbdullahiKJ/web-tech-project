@@ -20,7 +20,7 @@ export const SignupFormSchema = z.object({
         .trim(),
     }).refine((values) => values.password === values.confirmPassword, { error: 'Passwords do not match.', path: ["confirmPassword"] })
  
-export type FormState =
+export type SignupFormState =
    {
       errors?: {
         name?: {
@@ -38,3 +38,36 @@ export type FormState =
       }
     }
     | undefined
+
+export const ReviewFormSchema = z.object({
+    rating: z
+        .number()
+        .min(0, { error: 'Rating must be at least 0.' })
+        .max(5, { error: 'Rating must be at most 5.' }),
+    review_description: z
+        .string()
+        .min(10, { error: 'Review must be at least 10 characters long.' })
+        .max(200, { error: 'Review must be at most 200 characters long.' }),
+    movie_id: z
+        .string()
+        .min(1, { error: 'Movie ID is required.' }),
+    user_id: z
+        .string()
+        .min(1, { error: 'User ID is required.' }),})
+
+export type ReviewFormState = {
+    errors?: {
+        rating?: {
+            errors: string[];
+        } | undefined;
+        review_description?: {
+            errors: string[];
+        } | undefined;
+        movie_id?: {
+            errors: string[];
+        } | undefined;
+        user_id?: {
+            errors: string[];
+        } | undefined;
+    }
+} | undefined

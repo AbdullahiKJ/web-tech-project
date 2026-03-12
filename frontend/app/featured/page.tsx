@@ -12,8 +12,6 @@ export default async function Home() {
     let data = await fetch('https://api.themoviedb.org/3/movie/popular', options);
     let response = await data.json();
     let popularMovies = response.results;
-    console.log(popularMovies);
-
 
     return (
         <main className="flex flex-col items-center justify-between px-8 py-8">
