@@ -6,6 +6,8 @@ export interface ReviewProps {
     review_description: string;
     size?: number;
     user_id?: string;
+    movie_id?: string;
+    id?: string;
 }
 
 export default function Review(props: ReviewProps) {

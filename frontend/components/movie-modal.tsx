@@ -2,19 +2,12 @@
 import { ReviewProps} from '@/components/review';
 import Review from '@/components/review';
 import Rating from '@/components/rating';
-import React, { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useState } from 'react';
 import {createReview} from "@/app/actions/reviews";
+import { Movie } from '@/app/lib/definitions';
 
 interface Props {
-    movie: MovieInfo;
-}
-
-interface MovieInfo {
-    poster_path: string;
-    title: string;
-    vote_average: number;
-    overview: string;
-    id: string;
+    movie: Movie;
 }
 
 async function isInWatchList(movieId: string): Promise<boolean> {
@@ -35,33 +28,33 @@ async function sendWatchlistRequest(movieId: string, action: 'add' | 'remove'): 
 }
 
 async function fetchReviews(movieId: string) {
-    let data = await fetch(`http://localhost:8080/media/${movieId}/reviews`);
+    let data = await fetch(`http://localhost:8080/reviews/movie/${movieId}`);
     let response = await data.json();
     return response.reviews;
 }
 
 export default function MovieModal(props: Props) {
     const baseImgUrl: string = 'https://image.tmdb.org/t/p/original';
-    const [reviewing, setReviewing] = React.useState(false);
-    const [inWatchlist, setInWatchlist] = React.useState(false);
-    const [reviews, setReviews] = React.useState<ReviewProps[]>([]);
+    const [reviewing, setReviewing] = useState(false);
+    const [inWatchlist, setInWatchlist] = useState(false);
+    const [reviews, setReviews] = useState<ReviewProps[]>([]);
     const [state, action, pending] = useActionState(createReview, undefined)
 
     async function handleOpenModal() {
         // Show the modal
-        (document.getElementById(props.movie.id) as HTMLDialogElement | null)?.showModal();
+        (document.getElementById(String(props.movie.id)) as HTMLDialogElement | null)?.showModal();
 
         // Check if the movie is in the user's watchlist
-        const result = await isInWatchList(props.movie.id);
+        const result = await isInWatchList(String(props.movie.id));
         setInWatchlist(result);
 
         // Fetch the reviews for the movie
-        const reviews = await fetchReviews(props.movie.id);
+        const reviews = await fetchReviews(String(props.movie.id));
         setReviews(reviews);
     }
 
     async function handleWatchlist() {
-        await sendWatchlistRequest(props.movie.id, inWatchlist ? 'remove' : 'add');
+        await sendWatchlistRequest(String(props.movie.id), inWatchlist ? 'remove' : 'add');
         setInWatchlist(!inWatchlist);
     }
 
@@ -80,6 +73,7 @@ export default function MovieModal(props: Props) {
             <button
                 type="button"
                 onClick={handleOpenModal}
+                className='cursor-pointer'
             >
                 <img
                     className="rounded-xl"
@@ -90,7 +84,7 @@ export default function MovieModal(props: Props) {
                 />
             </button>
             {/* Modal */}
-            <dialog className="modal" id={props.movie.id}>
+            <dialog className="modal" id={String(props.movie.id)}>
                 <div className="modal-box grid h-10/12 max-w-6xl grid-cols-6 gap-10">
                     {/* Image and Buttons */}
                     <div className="col-span-2 flex flex-col justify-items-center gap-10">
@@ -138,7 +132,7 @@ export default function MovieModal(props: Props) {
                                 <div className="flex flex-col gap-5">
                                     <p className='text-xl'>Review</p>
                                     <form className='flex flex-col gap-5' action={action}>
-                                        <input name="movie_id" type="hidden" value={props.movie.id} />
+                                        <input name="movie_id" type="hidden" value={String(props.movie.id)} />
                                         <input name="user_id" type="hidden" value={1} /> {/* Replace with actual user ID */}
                                         <input name="rating" type="number" step="0.5" min="0" max="5" className="input input-bordered" placeholder="Rating (0-5)"/>
                                         <textarea name="review_description" className="textarea w-full min-h-85" placeholder="Write your review here..." />

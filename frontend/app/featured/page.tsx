@@ -6,7 +6,7 @@ export default async function Home() {
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: 'Bearer ' + process.env.TMDB_AUTH
+            Authorization: 'Bearer ' + process.env.NEXT_PUBLIC_TMDB_AUTH
         }
     }
     let data = await fetch('https://api.themoviedb.org/3/movie/popular', options);
