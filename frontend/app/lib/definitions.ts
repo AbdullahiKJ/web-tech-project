@@ -53,7 +53,11 @@ export const ReviewFormSchema = z.object({
         .min(1, { error: 'Movie ID is required.' }),
     user_id: z
         .string()
-        .min(1, { error: 'User ID is required.' }),})
+        .min(1, { error: 'User ID is required.' }),
+    review_id: z
+        .string()
+        .min(0)
+    })
 
 export type ReviewFormState = {
     errors?: {

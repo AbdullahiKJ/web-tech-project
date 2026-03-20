@@ -8,6 +8,11 @@ import { Movie } from '@/app/lib/definitions';
 
 interface Props {
     movie: Movie;
+    review?: ReviewProps;
+    isOpen?: boolean;
+    setIsOpen: (open: boolean) => void;
+    onExitModal?: () => void;
+    isEditing?: boolean;
 }
 
 async function isInWatchList(movieId: string): Promise<boolean> {
@@ -35,7 +40,9 @@ async function fetchReviews(movieId: string) {
 
 export default function MovieModal(props: Props) {
     const baseImgUrl: string = 'https://image.tmdb.org/t/p/original';
-    const [reviewing, setReviewing] = useState(false);
+
+    // Set reviewing to true if a review is passed as a prop
+    const [reviewing, setReviewing] = useState<boolean>(() => props.review != null);
     const [inWatchlist, setInWatchlist] = useState(false);
     const [reviews, setReviews] = useState<ReviewProps[]>([]);
     const [state, action, pending] = useActionState(createReview, undefined)
@@ -62,13 +69,26 @@ export default function MovieModal(props: Props) {
     useEffect(() => {
         if(state?.success) {
             setReviewing(false);
-            // Add your review to the top of the reviews list
-            setReviews([state.review, ...reviews]);
+            // Refresh the reviews list
+            fetchReviews(String(props.movie.id)).then((reviews: ReviewProps[]) => setReviews(reviews));
         }
         }, [state])
 
+    // Set reviewing to true if there is a review prop on the first render
+    useEffect(() => {
+        if (props.review) {
+            setReviewing(true);
+        }
+    }, [props.review]);
+
+    useEffect(() => {
+        if (props.isOpen) {
+            handleOpenModal();
+        }
+    }, [props.isOpen]);
+
     return (
-        <div>
+        <div className='flex items-center'>
             {/* Button/Image trigger for the modal */}
             <button
                 type="button"
@@ -98,7 +118,7 @@ export default function MovieModal(props: Props) {
                         <button className="btn btn-outline" onClick={() => setReviewing(true)}>
                             Leave a review
                         </button>
-                        <button className="btn btn-outline" onClick={handleWatchlist}>
+                        <button className="btn btn-outline" onClick={() => props.setIsOpen?.(true)}>
                             {inWatchlist ? 'Remove from' : 'Add to'} watchlist
                         </button>
                     </div>
@@ -109,33 +129,39 @@ export default function MovieModal(props: Props) {
                         {!reviewing && <Rating rating={props.movie.vote_average} size={48} />}
                         {!reviewing 
                             ? (
-                            // Description
-                            <div className="flex flex-col gap-5">
-                                <p className="text-xl text-white">Synopsis</p>
-                                <p className="text-white">{props.movie.overview}</p>
-                                {/* Reviews */}
-                                <div className="flex flex-col gap-3">
-                                    <p className="text-xl text-white">Reviews</p>
-                                    {reviews.map((review: any) => (
-                                        <Review key={review.id}
-                                            rating={review.rating}
-                                            review_description={review.review_description}
-                                        />
-                                    ))}
-                                    <Review rating={4} review_description='testing'/>
-                                    <Review rating={3.5} review_description='Another review'/>
-                                    <Review rating={5} review_description='Excellent movie!'/>
+                                // Description
+                                <div className="flex flex-col gap-5">
+                                    <p className="text-xl text-white">Synopsis</p>
+                                    <p className="text-white">{props.movie.overview}</p>
+                                    {/* Reviews */}
+                                    <div className="flex flex-col gap-3">
+                                        <p className="text-xl text-white">Reviews</p>
+                                        {reviews.map((review: any) => (
+                                            <Review key={review.id}
+                                                rating={review.rating}
+                                                review_description={review.review_description}
+                                            />
+                                        ))}
+                                        {/* No Reviews Placeholder */}
+                                        {reviews.length == 0 && (
+                                            <p className='text-l text-center pt-10'>No Reviews. Be the first!</p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
                             ) : (
                                 // Review form
                                 <div className="flex flex-col gap-5">
                                     <p className='text-xl'>Review</p>
+                                    <p>{props.review?.id}</p>
+                                    <p>{`${props.isEditing}`}</p>
                                     <form className='flex flex-col gap-5' action={action}>
                                         <input name="movie_id" type="hidden" value={String(props.movie.id)} />
                                         <input name="user_id" type="hidden" value={1} /> {/* Replace with actual user ID */}
-                                        <input name="rating" type="number" step="0.5" min="0" max="5" className="input input-bordered" placeholder="Rating (0-5)"/>
-                                        <textarea name="review_description" className="textarea w-full min-h-85" placeholder="Write your review here..." />
+                                        <input name="review_id" type="hidden" value={props.isEditing ? props.review?.id : ""} />
+                                        <input name="rating" type="number" step="0.5" min="0" max="5" defaultValue={props.review?.rating ?? undefined} 
+                                        className="input input-bordered" placeholder="Rating (0-5)"/>
+                                        <textarea name="review_description" className="textarea w-full min-h-85" placeholder="Write your review here..."
+                                        defaultValue={props.review?.review_description ?? undefined} />
                                         <button className="btn btn-outline flex-none float-right" type="submit">
                                             Submit
                                         </button>
@@ -145,7 +171,7 @@ export default function MovieModal(props: Props) {
                                             {Object.entries(state.errors).map(([field, error]) => (
                                                 <div key={field}>
                                                     {error?.errors.map((err) => (
-                                                        <p key={err}>- {err}</p>
+                                                        <p key={err}>-{field}: {err}</p>
                                                     ))}
                                                 </div>
                                             ))}
@@ -156,7 +182,12 @@ export default function MovieModal(props: Props) {
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
-                    <button onClick={() => setReviewing(false)}></button>
+                    <button onClick={() => {
+                        setReviewing(false); 
+                        props.setIsOpen(false);
+                        props.onExitModal?.(); 
+                    }}>
+                    </button>
                 </form>
             </dialog>
         </div>
