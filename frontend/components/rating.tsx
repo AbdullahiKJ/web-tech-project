@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function Rating(props: Props) {
-    let fullStars = Math.floor(props.rating/2);
-    let halfStars = props.rating/2 - fullStars >= 0.5 ? 0.5 : 0;
+    let fullStars = Math.floor(props.rating/1);
+    let halfStars = props.rating % 1 >= 0.5 ? 1 : 0;
 
     const starCount = 5;
     const stars: ReactElement[] = [];
