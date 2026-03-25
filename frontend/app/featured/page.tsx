@@ -5,9 +5,17 @@ import { useEffect, useState } from 'react';
 import { Movie } from '../lib/definitions';
 
 export default function Home() {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean[]>([]);
     const [featured, setFeatured] = useState<Movie[]>([])
     const [loading, setLoading] = useState(true);
+
+    function setStateAtIndex(index: number) {
+        return (value: boolean) => {
+            const newState = [...isOpen]
+            newState[index] = value
+            setIsOpen(newState)
+        };
+    }
 
     async function fetchFeatured() {
         setLoading(true);
@@ -37,12 +45,12 @@ export default function Home() {
                 </div>
             ) : (
                 <div className="flex flex-wrap gap-5 py-4 justify-items-center">
-                    {featured.map((movie: any) => (
+                    {featured.map((movie: Movie, index: number) => (
                         <MovieModal 
                             key={movie.id} 
                             movie={movie}
-                            isOpen={isOpen} 
-                            setIsOpen={setIsOpen} 
+                            isOpen={isOpen[index]} 
+                            setIsOpen={setStateAtIndex(index)} 
                             isEditing={false}
                         />
                     ))}

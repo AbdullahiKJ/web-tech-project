@@ -13,6 +13,7 @@ interface Props {
     setIsOpen: (open: boolean) => void;
     onExitModal?: () => void;
     isEditing?: boolean;
+    onUpdateWatchList?: () => void;
 }
 
 async function isInWatchList(movieId: string): Promise<boolean> {
@@ -25,7 +26,7 @@ async function isInWatchList(movieId: string): Promise<boolean> {
     return watchlist.some((movie: string) => movie === `${movieId}`);
 }
 
-async function sendWatchlistRequest(movieId: string, action: 'add' | 'remove'): Promise<void> {
+export async function sendWatchlistRequest(movieId: string, action: 'add' | 'remove'): Promise<void> {
     const options: RequestInit = {
         method: action === 'add' ? 'POST' : 'DELETE',
     };
@@ -61,8 +62,12 @@ export default function MovieModal(props: Props) {
     }
 
     async function handleWatchlist() {
+        props.setIsOpen?.(true)
         await sendWatchlistRequest(String(props.movie.id), inWatchlist ? 'remove' : 'add');
         setInWatchlist(!inWatchlist);
+
+        // Call the On Update Watchlist method if it exists
+        props.onUpdateWatchList?.();
     }
 
     // After submitting a review close the review form and show the reviews
@@ -118,7 +123,7 @@ export default function MovieModal(props: Props) {
                         <button className="btn btn-outline" onClick={() => setReviewing(true)}>
                             Leave a review
                         </button>
-                        <button className="btn btn-outline" onClick={() => props.setIsOpen?.(true)}>
+                        <button className="btn btn-outline" onClick={handleWatchlist}>
                             {inWatchlist ? 'Remove from' : 'Add to'} watchlist
                         </button>
                     </div>
