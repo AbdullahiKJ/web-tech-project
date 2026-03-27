@@ -12,8 +12,10 @@
         "cn",
         "cva"
     ],
-    "tailwindStylesheet": "resources/css/app.css",
+    "tailwindStylesheet": "app/globals.css",
     "tabWidth": 4,
+    "bracketSpacing": true,
+    "endOfLine": "lf",
     "overrides": [
         {
             "files": "**/*.yml",
