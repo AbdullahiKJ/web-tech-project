@@ -18,9 +18,9 @@ interface Props {
 
 async function isInWatchList(movieId: string): Promise<boolean> {
     // Fetch the user's watchlist and check if the movie is in it
-    let data = await fetch('http://localhost:8080/watchlist/1');
-    let response = await data.json();
-    let watchlist = response.movies;
+    const data = await fetch('http://localhost:8080/watchlist/1');
+    const response = await data.json();
+    const watchlist = response.movies;
 
     // Cast the movieId to a string and compare
     return watchlist.some((movie: string) => movie === `${movieId}`);
@@ -34,8 +34,8 @@ export async function sendWatchlistRequest(movieId: string, action: 'add' | 'rem
 }
 
 async function fetchReviews(movieId: string) {
-    let data = await fetch(`http://localhost:8080/reviews/movie/${movieId}`);
-    let response = await data.json();
+    const data = await fetch(`http://localhost:8080/reviews/movie/${movieId}`);
+    const response = await data.json();
     return response.reviews;
 }
 

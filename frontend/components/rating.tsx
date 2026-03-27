@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function Rating(props: Props) {
-    let fullStars = Math.floor(props.rating/1);
-    let halfStars = props.rating % 1 >= 0.5 ? 1 : 0;
+    const fullStars = Math.floor(props.rating/1);
+    const halfStars = props.rating % 1 >= 0.5 ? 1 : 0;
 
     const starCount = 5;
     const stars: ReactElement[] = [];
@@ -31,7 +31,7 @@ export default function Rating(props: Props) {
     }
 
     // Empty stars
-    let leftovers = starCount - stars.length;
+    const leftovers = starCount - stars.length;
     for (let i = 0; i < leftovers; i++) {
         stars.push(<Star key={count} size={props.size}/>);
         count++;

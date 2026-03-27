@@ -31,8 +31,8 @@ export default function Home() {
         setLoading(true);
 
         // Get a list of the user's watchlist
-        let res = await fetch('http://localhost:8080/watchlist/1');
-        let json = await res.json();
+        const res = await fetch('http://localhost:8080/watchlist/1');
+        const json = await res.json();
  
         // Fetch each movie
         const moviePromises = json.movies.map(async (id: number) => {

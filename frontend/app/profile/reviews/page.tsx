@@ -22,8 +22,8 @@ export default function Home() {
         setLoading(true);
 
         // Get a list of the user's reviews
-        let res = await fetch('http://localhost:8080/reviews/users/1');
-        let json = await res.json();
+        const res = await fetch('http://localhost:8080/reviews/users/1');
+        const json = await res.json();
  
         // Fetch each movie
         const moviePromises = json.reviews.map(async (review: ReviewProps) => {

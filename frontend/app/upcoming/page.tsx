@@ -36,8 +36,8 @@ export default function Home() {
         const minDate = today.toISOString().split("T")[0]
         const maxDate = nextYear.toISOString().split("T")[0];
 
-        let data = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=${minDate}&primary_release_date.lte=${maxDate}&sort_by=popularity.desc`, options);
-        let response = await data.json();
+        const data = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=${minDate}&primary_release_date.lte=${maxDate}&sort_by=popularity.desc`, options);
+        const response = await data.json();
         setFeatured(response.results);
         setLoading(false);
     }

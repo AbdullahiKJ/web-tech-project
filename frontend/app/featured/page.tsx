@@ -27,8 +27,8 @@ export default function Home() {
                 Authorization: 'Bearer ' + process.env.NEXT_PUBLIC_TMDB_AUTH
             }
         }
-        let data = await fetch('https://api.themoviedb.org/3/movie/popular', options);
-        let response = await data.json();
+        const data = await fetch('https://api.themoviedb.org/3/movie/popular', options);
+        const response = await data.json();
         setFeatured(response.results);
         setLoading(false);
     }
