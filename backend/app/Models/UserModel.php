@@ -9,8 +9,8 @@ class UserModel extends Model
     protected $table = 'users';
     protected $allowedFields = ['id', 'name', 'email', 'password_hash', 'display_name'];
 
-    public function getUsers()
+    public function getUser($slug)
     {
-        return $this->findAll();
+        return $this->find($slug);
     }
 }

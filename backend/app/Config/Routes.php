@@ -10,7 +10,9 @@ $routes->get('/api/test', 'Api::test');
 
 // User Routes
 $routes->post('/users', 'Users::create');
-$routes->put('/users/(:segment)', 'Users::update/$1');
+$routes->get('/users/(:segment)', 'Users::showUser/$1');
+$routes->put('/users/name/(:segment)', 'Users::update/$1/1');
+$routes->put('/users/password/(:segment)', 'Users::update/$1/2');
 $routes->delete('/users/(:segment)', 'Users::delete/$1');
 
 // Review Routes
