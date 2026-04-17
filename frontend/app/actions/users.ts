@@ -73,14 +73,14 @@ export async function updateUserPassword(
     }
 
     // Prepare data for insertion into database
-    const { password } = validatedFields.data;
+    const { existing_password, password } = validatedFields.data;
 
     const options: RequestInit = {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ existing_password, password }),
         cache: 'no-store',
     };
 
