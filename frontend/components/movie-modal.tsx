@@ -5,7 +5,7 @@ import Rating from '@/components/rating';
 import { useEffect, useActionState, useState } from 'react';
 import { createReview } from '@/app/actions/reviews';
 import { Movie } from '@/app/lib/definitions';
-import RatingInput from './rating-input';
+import ReviewForm from './review-form';
 
 interface Props {
     movie: Movie;
@@ -17,8 +17,8 @@ interface Props {
     onUpdateWatchList?: () => void;
 }
 
+// Fetch the user's watchlist and check if the movie is in it
 async function isInWatchList(movieId: string): Promise<boolean> {
-    // Fetch the user's watchlist and check if the movie is in it
     const data = await fetch('http://localhost:8080/watchlist/1');
     const response = await data.json();
     const watchlist = response.movies;
@@ -27,6 +27,7 @@ async function isInWatchList(movieId: string): Promise<boolean> {
     return watchlist.some((movie: string) => movie === `${movieId}`);
 }
 
+// Send a request to add/remove the movie from the user's watchlist
 export async function sendWatchlistRequest(
     movieId: string,
     action: 'add' | 'remove',
@@ -37,6 +38,7 @@ export async function sendWatchlistRequest(
     await fetch(`http://localhost:8080/watchlist/1/${movieId}`, options);
 }
 
+// Fetch the reviews for a movie
 async function fetchReviews(movieId: string) {
     const data = await fetch(`http://localhost:8080/reviews/movie/${movieId}`);
     const response = await data.json();
@@ -52,6 +54,9 @@ export default function MovieModal(props: Props) {
     );
     const [inWatchlist, setInWatchlist] = useState(false);
     const [reviews, setReviews] = useState<ReviewProps[]>([]);
+    const [userReview, setUserReview] = useState<ReviewProps | undefined>(
+        props.review,
+    );
     const [state, action, pending] = useActionState(createReview, undefined);
 
     async function handleOpenModal() {
@@ -68,7 +73,21 @@ export default function MovieModal(props: Props) {
 
         // Fetch the reviews for the movie
         const reviews = await fetchReviews(String(props.movie.id));
-        setReviews(reviews);
+
+        // Check if the user has already reviewed the movie
+        // todo: replace with current user's id
+        const userReview = reviews.find(
+            (review: ReviewProps) => review.user_id === '1',
+        );
+
+        // Remove the user's review from the reviews list if it exists
+        const filteredReviews = reviews.filter(
+            (review: ReviewProps) => review.user_id !== '1',
+        );
+
+        // Set the reviews and user review state
+        setReviews(filteredReviews);
+        setUserReview(userReview);
     }
 
     async function handleWatchlist() {
@@ -137,9 +156,13 @@ export default function MovieModal(props: Props) {
                         />
                         <button
                             className="btn btn-outline"
-                            onClick={() => setReviewing(true)}
+                            onClick={() => setReviewing(!reviewing)}
                         >
-                            Leave a review
+                            {!reviewing
+                                ? userReview
+                                    ? 'Edit Review'
+                                    : 'Leave a review'
+                                : 'View Movie'}
                         </button>
                         <button
                             className="btn btn-outline"
@@ -166,6 +189,16 @@ export default function MovieModal(props: Props) {
                                 {/* Reviews */}
                                 <div className="flex flex-col gap-3">
                                     <p className="text-xl">Reviews</p>
+                                    {/* User Review */}
+                                    {userReview && (
+                                        <Review
+                                            rating={userReview.rating}
+                                            review_description={
+                                                userReview.review_description
+                                            }
+                                        />
+                                    )}
+                                    {/* Other Reviews */}
                                     {reviews.map((review: any) => (
                                         <Review
                                             key={review.id}
@@ -176,7 +209,7 @@ export default function MovieModal(props: Props) {
                                         />
                                     ))}
                                     {/* No Reviews Placeholder */}
-                                    {reviews.length == 0 && (
+                                    {reviews.length == 0 && !userReview && (
                                         <p className="text-l pt-10 text-center">
                                             No Reviews. Be the first!
                                         </p>
@@ -185,72 +218,11 @@ export default function MovieModal(props: Props) {
                             </div>
                         ) : (
                             // Review form
-                            <div className="flex flex-col gap-5">
-                                <p className="text-xl">Review</p>
-                                <form
-                                    className="flex flex-col gap-5"
-                                    action={action}
-                                >
-                                    <input
-                                        name="movie_id"
-                                        type="hidden"
-                                        value={String(props.movie.id)}
-                                    />
-                                    <input
-                                        name="user_id"
-                                        type="hidden"
-                                        value={1}
-                                    />{' '}
-                                    {/* Replace with actual user ID */}
-                                    <input
-                                        name="review_id"
-                                        type="hidden"
-                                        value={
-                                            props.isEditing
-                                                ? props.review?.id
-                                                : ''
-                                        }
-                                    />
-                                    <RatingInput
-                                        size="xl"
-                                        rating={
-                                            props.review?.rating ?? undefined
-                                        }
-                                    />
-                                    <textarea
-                                        name="review_description"
-                                        className="textarea min-h-85 w-full"
-                                        placeholder="Write your review here..."
-                                        defaultValue={
-                                            props.review?.review_description ??
-                                            undefined
-                                        }
-                                    />
-                                    <button
-                                        className="btn float-right flex-none btn-outline"
-                                        type="submit"
-                                    >
-                                        Submit
-                                    </button>
-                                </form>
-                                {state?.errors && (
-                                    <div className="text-sm text-red-500">
-                                        {Object.entries(state.errors).map(
-                                            ([field, error]) => (
-                                                <div key={field}>
-                                                    {error?.errors.map(
-                                                        (err) => (
-                                                            <p key={err}>
-                                                                -{field}: {err}
-                                                            </p>
-                                                        ),
-                                                    )}
-                                                </div>
-                                            ),
-                                        )}
-                                    </div>
-                                )}
-                            </div>
+                            <ReviewForm
+                                movie={props.movie}
+                                isEditing={false}
+                                action={action}
+                            />
                         )}
                     </div>
                 </div>
