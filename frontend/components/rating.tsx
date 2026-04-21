@@ -15,7 +15,7 @@ export default function Rating(props: Props) {
         if (value === 0) {
             stars.push(
                 <div
-                    className="rating-hidden"
+                    className="rating-hidden w-0"
                     aria-label={`${value} star`}
                     aria-current={halfRating === value}
                 />,

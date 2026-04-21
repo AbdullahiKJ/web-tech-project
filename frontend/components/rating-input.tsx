@@ -14,7 +14,7 @@ export default function RatingInput(props: Props) {
                 <input
                     type="radio"
                     name="rating"
-                    className="rating-hidden"
+                    className="rating-hidden w-0"
                     defaultChecked={props.rating == null || props.rating === 0}
                     value={0}
                 />,
