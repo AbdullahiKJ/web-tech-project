@@ -31,7 +31,7 @@ export default function Home() {
             },
         };
         const data = await fetch(
-            `https://api.themoviedb.org/3/movie/popular?page=${page || 1}`,
+            `https://api.themoviedb.org/3/movie/popular?page=${page || 1}&include_adult=false`,
             options,
         );
         const response = await data.json();

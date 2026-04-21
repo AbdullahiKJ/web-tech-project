@@ -74,7 +74,7 @@ export function AppHeader() {
                     {mainNavItems.map((item, index) => (
                         <Link
                             href={item.href || '#'}
-                            className="flex h-9 cursor-pointer flex-row px-3"
+                            className="flex h-9 cursor-pointer flex-row items-center px-3"
                             key={index}
                         >
                             {item.icon && (
@@ -86,7 +86,7 @@ export function AppHeader() {
                 </div>
 
                 <div className="ml-auto flex items-center space-x-2">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="flex gap-5">
                         <input
                             type="text"
                             placeholder="Search"
@@ -101,6 +101,7 @@ export function AppHeader() {
                     <Link href="/sign-in" className="btn">
                         Log in
                     </Link>
+                    {/* Theme Toggle */}
                     <label className="toggle text-base-content">
                         <input
                             type="checkbox"
