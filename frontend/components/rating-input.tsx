@@ -1,36 +1,37 @@
 import { ReactElement } from 'react';
 
 interface Props {
-    rating: number;
     size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    rating?: number;
 }
 
-export default function Rating(props: Props) {
-    // Round to nearest 0.5
-    const halfRating = Math.round(props.rating * 2) / 2;
+export default function RatingInput(props: Props) {
     const stars: ReactElement[] = [];
-
     for (let i = 0; i <= 10; i++) {
         const value = i / 2;
         if (value === 0) {
             stars.push(
-                <div
+                <input
+                    type="radio"
+                    name="rating"
                     className="rating-hidden"
-                    aria-label={`${value} star`}
-                    aria-current={halfRating === value}
+                    defaultChecked={props.rating == null || props.rating === 0}
+                    value={0}
                 />,
             );
         } else {
             stars.push(
-                <div
+                <input
+                    type="radio"
+                    name="rating"
                     className={`mask mask-star-2 mask-half-${i % 2 === 0 ? '2' : '1'}`}
                     aria-label={`${value} star`}
-                    aria-current={halfRating === value}
-                ></div>,
+                    defaultChecked={props.rating === value}
+                    value={value}
+                />,
             );
         }
     }
-
     return (
         <div className={`rating rating-half rating-${props.size}`}>{stars}</div>
     );

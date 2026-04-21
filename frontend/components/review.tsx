@@ -17,8 +17,8 @@ export default function Review(props: ReviewProps) {
             <CircleUser className="h-10 w-10" />
             {/* Review */}
             <div className="flex flex-col">
-                <p className="text-white">{props.review_description}</p>
-                <Rating rating={props.rating} size={props.size ?? 24} />
+                <p>{props.review_description}</p>
+                <Rating rating={props.rating} size={'sm'} />
             </div>
         </div>
     );
