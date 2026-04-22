@@ -134,8 +134,17 @@ export default function MovieModal(props: Props) {
                 onClick={handleOpenModal}
                 className="cursor-pointer"
             >
+                {/* Mobile */}
                 <img
-                    className="rounded-xl"
+                    className="rounded-xl sm:hidden"
+                    src={`${baseImgUrl}${props.movie.poster_path}`}
+                    alt={props.movie.title}
+                    width={150}
+                    height={20}
+                />
+                {/* Desktop */}
+                <img
+                    className="hidden rounded-xl sm:block"
                     src={`${baseImgUrl}${props.movie.poster_path}`}
                     alt={props.movie.title}
                     width={225}
@@ -144,9 +153,9 @@ export default function MovieModal(props: Props) {
             </button>
             {/* Modal */}
             <dialog className="modal" id={String(props.movie.id)}>
-                <div className="modal-box grid h-10/12 max-w-6xl grid-cols-6 gap-10 overflow-hidden">
+                <div className="modal-box grid h-4/5 max-w-6xl grid-cols-6 gap-10 overflow-hidden sm:h-3/5 xl:h-10/12">
                     {/* Image and Buttons */}
-                    <div className="col-span-2 flex flex-col justify-items-center gap-10">
+                    <div className="col-span-2 flex flex-col items-center gap-10">
                         <img
                             className="rounded-xl"
                             src={`${baseImgUrl}${props.movie.poster_path}`}
@@ -155,7 +164,7 @@ export default function MovieModal(props: Props) {
                             height={20}
                         />
                         <button
-                            className="btn btn-outline"
+                            className="btn w-full btn-outline"
                             onClick={() => setReviewing(!reviewing)}
                         >
                             {!reviewing
@@ -165,7 +174,7 @@ export default function MovieModal(props: Props) {
                                 : 'View Movie'}
                         </button>
                         <button
-                            className="btn btn-outline"
+                            className="btn w-full btn-outline"
                             onClick={handleWatchlist}
                         >
                             {inWatchlist ? 'Remove from' : 'Add to'} watchlist
@@ -173,7 +182,9 @@ export default function MovieModal(props: Props) {
                     </div>
                     {/* Description and reviews */}
                     <div className="col-span-4 col-start-3 flex flex-col gap-5 overflow-hidden">
-                        <p className="text-5xl">{props.movie.title}</p>
+                        <p className="text-3xl sm:text-5xl">
+                            {props.movie.title}
+                        </p>
                         {/* Rating */}
                         {!reviewing && (
                             <Rating
@@ -184,8 +195,8 @@ export default function MovieModal(props: Props) {
                         {!reviewing ? (
                             // Description
                             <div className="flex flex-1 flex-col gap-5 overflow-hidden">
-                                <p className="text-xl">Synopsis</p>
-                                <p className="shrink-0">
+                                <p className="text-lg sm:text-xl">Synopsis</p>
+                                <p className="shrink-0 text-sm">
                                     {props.movie.overview}
                                 </p>
                                 {/* Reviews */}

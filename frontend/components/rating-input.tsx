@@ -17,6 +17,7 @@ export default function RatingInput(props: Props) {
                     className="rating-hidden w-0"
                     defaultChecked={props.rating == null || props.rating === 0}
                     value={0}
+                    key={i}
                 />,
             );
         } else {
@@ -28,6 +29,7 @@ export default function RatingInput(props: Props) {
                     aria-label={`${value} star`}
                     defaultChecked={props.rating === value}
                     value={value}
+                    key={i}
                 />,
             );
         }
