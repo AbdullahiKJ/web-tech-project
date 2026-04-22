@@ -18,6 +18,7 @@ export default function Rating(props: Props) {
                     className="rating-hidden w-0"
                     aria-label={`${value} star`}
                     aria-current={halfRating === value}
+                    key={i}
                 />,
             );
         } else {
@@ -26,6 +27,7 @@ export default function Rating(props: Props) {
                     className={`mask mask-star-2 mask-half-${i % 2 === 0 ? '2' : '1'}`}
                     aria-label={`${value} star`}
                     aria-current={halfRating === value}
+                    key={i}
                 ></div>,
             );
         }

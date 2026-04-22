@@ -144,7 +144,7 @@ export default function MovieModal(props: Props) {
             </button>
             {/* Modal */}
             <dialog className="modal" id={String(props.movie.id)}>
-                <div className="modal-box grid h-10/12 max-w-6xl grid-cols-6 gap-10">
+                <div className="modal-box grid h-10/12 max-w-6xl grid-cols-6 gap-10 overflow-hidden">
                     {/* Image and Buttons */}
                     <div className="col-span-2 flex flex-col justify-items-center gap-10">
                         <img
@@ -172,7 +172,7 @@ export default function MovieModal(props: Props) {
                         </button>
                     </div>
                     {/* Description and reviews */}
-                    <div className="col-span-4 col-start-3 flex flex-col gap-5">
+                    <div className="col-span-4 col-start-3 flex flex-col gap-5 overflow-hidden">
                         <p className="text-5xl">{props.movie.title}</p>
                         {/* Rating */}
                         {!reviewing && (
@@ -183,12 +183,14 @@ export default function MovieModal(props: Props) {
                         )}
                         {!reviewing ? (
                             // Description
-                            <div className="flex flex-col gap-5">
+                            <div className="flex flex-1 flex-col gap-5 overflow-hidden">
                                 <p className="text-xl">Synopsis</p>
-                                <p className="">{props.movie.overview}</p>
+                                <p className="shrink-0">
+                                    {props.movie.overview}
+                                </p>
                                 {/* Reviews */}
-                                <div className="flex flex-col gap-3">
-                                    <p className="text-xl">Reviews</p>
+                                <p className="shrink-0 text-xl">Reviews</p>
+                                <div className="flex flex-1 flex-col overflow-y-auto">
                                     {/* User Review */}
                                     {userReview && (
                                         <Review

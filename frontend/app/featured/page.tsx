@@ -48,7 +48,7 @@ export default function Home() {
     return (
         <main className="grid p-8">
             {loading ? (
-                <div>
+                <div className="flex items-center justify-evenly">
                     <span className="loading loading-xl loading-spinner"></span>
                 </div>
             ) : (

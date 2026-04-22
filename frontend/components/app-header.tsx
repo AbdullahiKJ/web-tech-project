@@ -68,7 +68,7 @@ export function AppHeader() {
 
     return (
         <>
-            <div className="navbar bg-base-100 shadow-sm">
+            <div className="navbar bg-base-300 shadow-sm">
                 {/* Desktop Navigation */}
                 <div className="flex">
                     {mainNavItems.map((item, index) => (
