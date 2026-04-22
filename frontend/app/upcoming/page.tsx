@@ -92,7 +92,7 @@ export default function Home() {
     return (
         <main className="flex flex-col items-center justify-between px-8 py-8">
             {loading ? (
-                <div>
+                <div className="flex items-center justify-evenly">
                     <span className="loading loading-xl loading-spinner"></span>
                 </div>
             ) : (

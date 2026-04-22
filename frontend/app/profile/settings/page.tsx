@@ -1,8 +1,8 @@
 'use client';
 
 import { updateUserNames, updateUserPassword } from '@/app/actions/users';
+import Menu from '@/components/menu';
 import PasswordInput from '@/components/password-input';
-import Sidebar from '@/components/sidebar';
 import Toast, { ToastProps } from '@/components/toast';
 import { useActionState, useState, useEffect, useCallback } from 'react';
 
@@ -89,7 +89,8 @@ export default function Home() {
 
     return (
         <>
-            <Sidebar>
+            <Menu />
+            <div className="p-5">
                 <p className="text-3xl">Settings</p>
                 <div className="flex flex-row justify-center gap-50 pt-10">
                     {/* Username Section */}
@@ -243,9 +244,9 @@ export default function Home() {
                         <button className="btn btn-error">Sign Out</button>
                     </div>
                 </div>
-            </Sidebar>
-            {/* Display Toast notifications */}
-            {toast && <Toast message={toast.message} type={toast.type} />}
+                {/* Display Toast notifications */}
+                {toast && <Toast message={toast.message} type={toast.type} />}
+            </div>
         </>
     );
 }

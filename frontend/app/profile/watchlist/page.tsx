@@ -1,10 +1,10 @@
 'use client';
 
-import Sidebar from '@/components/sidebar';
 import { useState, useEffect, useCallback } from 'react';
 import { Movie } from '@/app/lib/definitions';
 import MovieModal from '@/components/movie-modal';
 import { Trash } from 'lucide-react';
+import Menu from '@/components/menu';
 
 export default function Home() {
     const [watchlist, setWatchlist] = useState<Movie[]>([]);
@@ -68,36 +68,44 @@ export default function Home() {
     }
 
     return (
-        <Sidebar>
-            <p className="text-3xl">Watchlist</p>
-            {loading ? (
-                <span className="loading loading-xl loading-spinner"></span>
-            ) : (
-                <div className="flex flex-wrap justify-evenly gap-5 py-4">
-                    {watchlist.map((movie: Movie, index: number) => {
-                        return (
-                            <div className="flex flex-col gap-2" key={movie.id}>
-                                <MovieModal
-                                    movie={movie}
-                                    isOpen={isOpen[index]}
-                                    setIsOpen={setStateAtIndex(index)}
-                                    onUpdateWatchList={fetchWatchlist}
-                                />
-                                <div className="flex flex-row justify-evenly">
-                                    <button
-                                        className="btn btn-circle btn-lg btn-error"
-                                        onClick={() =>
-                                            handleDelete(String(movie.id))
-                                        }
-                                    >
-                                        <Trash />
-                                    </button>
+        <>
+            <Menu />
+            <div className="p-5">
+                <p className="text-3xl">Watchlist</p>
+                {loading ? (
+                    <div className="flex items-center justify-evenly">
+                        <span className="loading loading-xl loading-spinner"></span>
+                    </div>
+                ) : (
+                    <div className="flex flex-wrap justify-evenly gap-5 py-4">
+                        {watchlist.map((movie: Movie, index: number) => {
+                            return (
+                                <div
+                                    className="flex flex-col gap-2"
+                                    key={movie.id}
+                                >
+                                    <MovieModal
+                                        movie={movie}
+                                        isOpen={isOpen[index]}
+                                        setIsOpen={setStateAtIndex(index)}
+                                        onUpdateWatchList={fetchWatchlist}
+                                    />
+                                    <div className="flex flex-row justify-evenly">
+                                        <button
+                                            className="btn btn-circle btn-lg btn-error"
+                                            onClick={() =>
+                                                handleDelete(String(movie.id))
+                                            }
+                                        >
+                                            <Trash />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </Sidebar>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+        </>
     );
 }
