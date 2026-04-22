@@ -3,11 +3,14 @@
 import MovieModal from '@/components/movie-modal';
 import { ReactNode, useEffect, useState } from 'react';
 import { Movie } from '../lib/definitions';
+import Pagination from '@/components/pagination';
 
 export default function Home() {
     const [isOpen, setIsOpen] = useState<boolean[]>([]);
-    const [featured, setFeatured] = useState<Movie[]>([]);
+    const [upcoming, setUpcoming] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     function setStateAtIndex(index: number) {
         return (value: boolean) => {
@@ -17,7 +20,7 @@ export default function Home() {
         };
     }
 
-    async function fetchFeatured() {
+    async function fetchUpcoming(page?: number) {
         setLoading(true);
         // Get upcoming movies from the TMDB API
         const options = {
@@ -41,16 +44,18 @@ export default function Home() {
         const maxDate = nextYear.toISOString().split('T')[0];
 
         const data = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=${minDate}&primary_release_date.lte=${maxDate}&sort_by=popularity.desc`,
+            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=${minDate}&primary_release_date.lte=${maxDate}&sort_by=popularity.desc&page=${page || 1}`,
             options,
         );
         const response = await data.json();
-        setFeatured(response.results);
+        setUpcoming(response.results);
         setLoading(false);
+        setTotalPages(response.total_pages);
+        setPage(page || 1);
     }
 
     useEffect(() => {
-        fetchFeatured();
+        fetchUpcoming();
     }, []);
 
     function getTimeUntilMovie(release_date: string): ReactNode {
@@ -92,7 +97,7 @@ export default function Home() {
                 </div>
             ) : (
                 <div className="flex flex-wrap justify-evenly gap-5 py-4">
-                    {featured.map((movie: Movie, index: number) => (
+                    {upcoming.map((movie: Movie, index: number) => (
                         <div
                             className="flex flex-col items-center gap-2"
                             key={movie.id}
@@ -109,6 +114,11 @@ export default function Home() {
                     ))}
                 </div>
             )}
+            <Pagination
+                index={page}
+                count={totalPages}
+                onPageChange={fetchUpcoming}
+            />
         </main>
     );
 }
