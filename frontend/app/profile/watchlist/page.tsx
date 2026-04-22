@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Movie } from '@/app/lib/definitions';
 import MovieModal from '@/components/movie-modal';
 import { Trash } from 'lucide-react';
@@ -18,6 +18,8 @@ export default function Home() {
             setIsOpen(newState);
         };
     }
+
+    const menuRef = useRef<any>(null);
 
     const options = {
         method: 'GET',
@@ -62,14 +64,20 @@ export default function Home() {
                 method: 'DELETE',
             });
 
-            // refresh review list
-            fetchWatchlist();
+            // update the review list
+            const newWatchlist = watchlist.filter(
+                (movie) => String(movie.id) !== movieId,
+            );
+            setWatchlist(newWatchlist);
+
+            // Update the menu counts
+            menuRef.current?.updateCounts(undefined, newWatchlist.length);
         } else throw new Error('Movie Id is null');
     }
 
     return (
         <>
-            <Menu />
+            <Menu ref={menuRef} />
             <div className="p-5">
                 <p className="text-3xl">Watchlist</p>
                 {loading ? (

@@ -1,8 +1,8 @@
 import { Bookmark, MessageCircleMore } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 
-export default function Menu() {
+export default forwardRef(function Menu(props, ref) {
     const [watchlistCount, setWatchlistCount] = useState(0);
     const [reviewCount, setReviewCount] = useState(0);
 
@@ -26,6 +26,16 @@ export default function Menu() {
         // Set the watchlist count
         setWatchlistCount(json.movies.length);
     }
+
+    function updateCounts(reviewCount?: number, watchlistCount?: number) {
+        if (reviewCount !== undefined) setReviewCount(reviewCount);
+        if (watchlistCount !== undefined) setWatchlistCount(watchlistCount);
+    }
+
+    useImperativeHandle(ref, () => ({
+        fetchWatchlist,
+        updateCounts,
+    }));
 
     useEffect(() => {
         fetchReviews();
@@ -76,4 +86,4 @@ export default function Menu() {
             </ul>
         </div>
     );
-}
+});

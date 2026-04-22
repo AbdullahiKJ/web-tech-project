@@ -164,7 +164,7 @@ export default function MovieModal(props: Props) {
                             height={20}
                         />
                         <button
-                            className="btn w-full btn-outline"
+                            className="btn h-auto w-full btn-outline"
                             onClick={() => setReviewing(!reviewing)}
                         >
                             {!reviewing
@@ -174,7 +174,7 @@ export default function MovieModal(props: Props) {
                                 : 'View Movie'}
                         </button>
                         <button
-                            className="btn w-full btn-outline"
+                            className="btn h-auto w-full btn-outline"
                             onClick={handleWatchlist}
                         >
                             {inWatchlist ? 'Remove from' : 'Add to'} watchlist
