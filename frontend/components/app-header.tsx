@@ -2,8 +2,9 @@
 
 import { Search, CircleUser, Clock, Star } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ThemeToggle } from './theme-toggle';
 
 type NavItem = {
     title?: string;
@@ -31,33 +32,7 @@ const mainNavItems: NavItem[] = [
 
 export function AppHeader() {
     const [query, setQuery] = useState('');
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const router = useRouter();
-
-    useEffect(() => {
-        // Check if the theme is stored in local storage
-        const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
-        if (saved) {
-            setTheme(saved);
-        } else {
-            // Check if the system theme is dark if there is no local storage theme
-            const prefersDark = window.matchMedia(
-                '(prefers-color-scheme: dark)',
-            ).matches;
-            setTheme(prefersDark ? 'dark' : 'light');
-        }
-    }, []);
-
-    // Update the theme when the theme state is updated
-    useEffect(() => {
-        document.documentElement.dataset.theme = theme;
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    // Update the theme
-    function toggleTheme() {
-        setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-    }
 
     function handleSubmit(e: React.SubmitEvent) {
         // Prevent the form from being resubmited
@@ -69,8 +44,53 @@ export function AppHeader() {
     return (
         <>
             <div className="navbar bg-base-300 shadow-sm">
+                {/* Mobile Navigation */}
+                <div className="sm:hidden">
+                    <div className="dropdown">
+                        <div
+                            tabIndex={0}
+                            role="button"
+                            className="btn btn-circle btn-ghost"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                {' '}
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M4 6h16M4 12h16M4 18h7"
+                                />{' '}
+                            </svg>
+                        </div>
+                        <ul
+                            tabIndex={-1}
+                            className="dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-300 p-2 shadow"
+                        >
+                            {mainNavItems.map((item, index) => (
+                                <li key={index}>
+                                    <Link
+                                        href={item.href || '#'}
+                                        className="flex h-9 cursor-pointer flex-row items-center px-3"
+                                        key={index}
+                                    >
+                                        {item.icon && (
+                                            <item.icon className="mr-2 h-4 w-4" />
+                                        )}
+                                        {item.title}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
                 {/* Desktop Navigation */}
-                <div className="flex">
+                <div className="hidden sm:flex">
                     {mainNavItems.map((item, index) => (
                         <Link
                             href={item.href || '#'}
@@ -101,53 +121,7 @@ export function AppHeader() {
                     <Link href="/sign-in" className="btn">
                         Log in
                     </Link>
-                    {/* Theme Toggle */}
-                    <label className="toggle text-base-content">
-                        <input
-                            type="checkbox"
-                            checked={theme === 'dark'}
-                            onChange={toggleTheme}
-                            className="theme-controller"
-                        />
-                        <svg
-                            aria-label="sun"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <g
-                                strokeLinejoin="round"
-                                strokeLinecap="round"
-                                strokeWidth="2"
-                                fill="none"
-                                stroke="currentColor"
-                            >
-                                <circle cx="12" cy="12" r="4"></circle>
-                                <path d="M12 2v2"></path>
-                                <path d="M12 20v2"></path>
-                                <path d="m4.93 4.93 1.41 1.41"></path>
-                                <path d="m17.66 17.66 1.41 1.41"></path>
-                                <path d="M2 12h2"></path>
-                                <path d="M20 12h2"></path>
-                                <path d="m6.34 17.66-1.41 1.41"></path>
-                                <path d="m19.07 4.93-1.41 1.41"></path>
-                            </g>
-                        </svg>
-                        <svg
-                            aria-label="moon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <g
-                                strokeLinejoin="round"
-                                strokeLinecap="round"
-                                strokeWidth="2"
-                                fill="none"
-                                stroke="currentColor"
-                            >
-                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-                            </g>
-                        </svg>
-                    </label>
+                    <ThemeToggle />
                 </div>
             </div>
         </>
