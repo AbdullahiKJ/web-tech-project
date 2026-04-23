@@ -37,10 +37,10 @@ export default function ReviewCard(props: CardProps) {
                 isEditing={reviewing ? true : false}
             />
             {/* Movie/Review Info */}
-            <div className="flex grow flex-row gap-5">
+            <div className="flex grow flex-row sm:gap-5">
                 <div className="flex flex-col p-5">
                     {/* Title */}
-                    <p className="pb-2 text-4xl">
+                    <p className="pb-2 text-3xl sm:text-4xl">
                         {props.movie.title ?? 'Missing title'}
                     </p>
                     {/* Rating */}
@@ -52,8 +52,8 @@ export default function ReviewCard(props: CardProps) {
                     </p>
                 </div>
                 {/* Div to fill space */}
-                <div className="grow" />
-                <div className="flex flex-row gap-5 p-5">
+                <div className="hidden sm:flex sm:grow" />
+                <div className="flex flex-col justify-center gap-5 p-5 sm:flex-row">
                     <button onClick={openReviewModal}>
                         <Pencil />
                     </button>

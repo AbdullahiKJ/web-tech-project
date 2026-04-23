@@ -92,9 +92,9 @@ export default function Home() {
             <Menu />
             <div className="p-5">
                 <p className="text-3xl">Settings</p>
-                <div className="flex flex-row justify-center gap-50 pt-10">
+                <div className="flex flex-col items-center justify-center gap-10 pt-10 sm:flex-row xl:gap-50">
                     {/* Username Section */}
-                    <div className="flex flex-col gap-5 bg-neutral p-10">
+                    <div className="flex flex-col gap-5 bg-base-300 p-10">
                         <p className="text-xl">User Settings</p>
                         <div>
                             <p>Update your personal information.</p>
@@ -171,7 +171,7 @@ export default function Home() {
                         </dialog>
                     </div>
                     {/* Password Section */}
-                    <div className="flex w-96 flex-col gap-5 bg-neutral p-10">
+                    <div className="flex flex-col gap-5 bg-base-300 p-10">
                         <p className="text-xl">Password</p>
                         <div>
                             <p>Manage your password.</p>
