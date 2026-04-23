@@ -1,7 +1,7 @@
 'use client';
 
 import ReviewCard from '@/components/review-card';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ReviewProps } from '@/components/review';
 import { Movie } from '@/app/lib/definitions';
 import Menu from '@/components/menu';
@@ -11,6 +11,8 @@ export default function Home() {
         [],
     );
     const [loading, setLoading] = useState(true);
+
+    const menuRef = useRef<any>(null);
 
     const options = {
         method: 'GET',
@@ -54,14 +56,20 @@ export default function Home() {
                 method: 'DELETE',
             });
 
-            // refresh review list
-            fetchReviews();
+            // update the review list
+            const newReviews = data.filter(
+                (item) => item.review.id !== reviewId,
+            );
+            setData(newReviews);
+
+            // Update the menu counts
+            menuRef.current?.updateCounts(newReviews.length, undefined);
         } else throw new Error('Movie Id is null');
     }
 
     return (
         <>
-            <Menu />
+            <Menu ref={menuRef} />
             <div className="p-5">
                 <p className="text-3xl">Reviews</p>
                 {loading ? (

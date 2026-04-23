@@ -64,7 +64,7 @@ export default function Home() {
                 method: 'DELETE',
             });
 
-            // update the review list
+            // update the watchlist list
             const newWatchlist = watchlist.filter(
                 (movie) => String(movie.id) !== movieId,
             );
