@@ -1,5 +1,15 @@
-import { redirect } from "next/navigation";
+'use client';
+
+import { redirect } from 'next/navigation';
+import { AuthContext } from '@/app/providers/AuthProvider';
+import { useContext } from 'react';
 
 export default function Home() {
-  redirect("/profile/watchlist");
+    // Redirect to the login page if the user is not authenticated
+    const authContext = useContext(AuthContext);
+    if (!authContext?.user?.id) {
+        redirect('/sign-in');
+    }
+
+    redirect('/profile/watchlist');
 }

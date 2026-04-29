@@ -21,7 +21,6 @@ export default forwardRef(function Menu(props, ref) {
         // todo: replace with the current user's id
         const res = await fetch('http://localhost:8080/watchlist/1');
         const json = await res.json();
-        console.log(json);
 
         // Set the watchlist count
         setWatchlistCount(json.movies.length);

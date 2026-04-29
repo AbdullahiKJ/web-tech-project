@@ -1,12 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { Movie } from '@/app/lib/definitions';
 import MovieModal from '@/components/movie-modal';
 import { Trash } from 'lucide-react';
 import Menu from '@/components/menu';
+import { AuthContext } from '@/app/providers/AuthProvider';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
+    // Redirect to the login page if the user is not authenticated
+    const authContext = useContext(AuthContext);
+    if (!authContext?.user?.id) {
+        redirect('/sign-in');
+    }
+
     const [watchlist, setWatchlist] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState<boolean[]>([]);

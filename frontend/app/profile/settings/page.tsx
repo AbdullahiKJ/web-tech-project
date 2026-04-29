@@ -4,7 +4,15 @@ import { updateUserNames, updateUserPassword } from '@/app/actions/users';
 import Menu from '@/components/menu';
 import PasswordInput from '@/components/password-input';
 import Toast, { ToastProps } from '@/components/toast';
-import { useActionState, useState, useEffect, useCallback } from 'react';
+import {
+    useActionState,
+    useState,
+    useEffect,
+    useCallback,
+    useContext,
+} from 'react';
+import { redirect } from 'next/navigation';
+import { AuthContext } from '@/app/providers/AuthProvider';
 
 async function deleteUserAccount() {
     const res = await fetch('http://localhost:8080/users/1', {
@@ -16,6 +24,12 @@ async function deleteUserAccount() {
 }
 
 export default function Home() {
+    // Redirect to the login page if the user is not authenticated
+    const authContext = useContext(AuthContext);
+    if (!authContext?.user?.id) {
+        redirect('/sign-in');
+    }
+
     const [nameState, nameAction, namePending] = useActionState(
         updateUserNames,
         undefined,

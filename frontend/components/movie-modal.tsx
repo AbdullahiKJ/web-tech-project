@@ -2,10 +2,12 @@
 import { ReviewProps } from '@/components/review';
 import Review from '@/components/review';
 import Rating from '@/components/rating';
-import { useEffect, useActionState, useState } from 'react';
+import { useEffect, useActionState, useState, useContext } from 'react';
 import { createReview } from '@/app/actions/reviews';
 import { Movie } from '@/app/lib/definitions';
 import ReviewForm from './review-form';
+import { AuthContext } from '@/app/providers/AuthProvider';
+import { redirect } from 'next/navigation';
 
 interface Props {
     movie: Movie;
@@ -46,6 +48,9 @@ async function fetchReviews(movieId: string) {
 }
 
 export default function MovieModal(props: Props) {
+    // Get auth context
+    const authContext = useContext(AuthContext);
+
     const baseImgUrl: string = 'https://image.tmdb.org/t/p/original';
 
     // Set reviewing to true if a review is passed as a prop
@@ -90,7 +95,17 @@ export default function MovieModal(props: Props) {
         setUserReview(userReview);
     }
 
+    function handleReview() {
+        // Redirect to the login page if the user is not authenticated
+        if (authContext?.user?.id == null) redirect('/sign-in');
+
+        setReviewing(!reviewing);
+    }
+
     async function handleWatchlist() {
+        // Redirect to the login page if the user is not authenticated
+        if (authContext?.user?.id == null) redirect('/sign-in');
+
         props.setIsOpen?.(true);
         await sendWatchlistRequest(
             String(props.movie.id),
@@ -165,7 +180,7 @@ export default function MovieModal(props: Props) {
                         />
                         <button
                             className="btn h-auto w-full btn-outline"
-                            onClick={() => setReviewing(!reviewing)}
+                            onClick={handleReview}
                         >
                             {!reviewing
                                 ? userReview
