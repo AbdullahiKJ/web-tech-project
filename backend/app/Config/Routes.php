@@ -8,6 +8,12 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/api/test', 'Api::test');
 
+// Session Routes
+$routes->post('/auth/login/(:segment)', 'Auth::login');
+$routes->post('/auth/logout/(:segment)', 'Auth::logout');
+$routes->get('/auth/timeout', 'Auth::timeout');
+$routes->get('/auth', 'Auth::me');
+
 // User Routes
 $routes->post('/users', 'Users::create');
 $routes->get('/users/(:segment)', 'Users::showUser/$1');
