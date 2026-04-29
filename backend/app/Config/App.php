@@ -199,10 +199,4 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
-
-    /**
-     * Session Management
-     */
-    public $sessionDriver = 'CodeIgniter\Session\Handlers\DatabaseHandler';
-    public $sessionSavePath = 'sessions';
 }
