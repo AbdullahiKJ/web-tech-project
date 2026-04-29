@@ -1,33 +1,37 @@
-import { SignupFormSchema, SignupFormState } from "@/app/lib/definitions";
+import {
+    SigninFormSchema,
+    SigninFormState,
+    SignupFormSchema,
+    SignupFormState,
+} from '@/app/lib/definitions';
 import * as z from 'zod';
 
 export async function signup(state: SignupFormState, formData: FormData) {
-
     // Validate form fields
     const validatedFields = SignupFormSchema.safeParse({
         name: formData.get('name'),
         email: formData.get('email'),
         password: formData.get('password'),
-        confirmPassword: formData.get('confirm-password')
-    })
-    
+        confirmPassword: formData.get('confirm-password'),
+    });
+
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
-            errors: z.treeifyError(validatedFields.error).properties
+            errors: z.treeifyError(validatedFields.error).properties,
         };
     }
 
     // Prepare data for insertion into database
-    const { name, email, password } = validatedFields.data
+    const { name, email, password } = validatedFields.data;
 
     const options: RequestInit = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name, email, password }),
-        cache: 'no-store'
+        cache: 'no-store',
     };
 
     try {
@@ -35,13 +39,74 @@ export async function signup(state: SignupFormState, formData: FormData) {
         if (!res.ok) {
             const text = await res.text();
             return { apiError: text };
-        }
-        else {
-            // Redirect to the home page after successful signup
-            return { success: true}
+        } else {
+            // Create session for the user
+            const sessionOptions: RequestInit = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+                credentials: 'include',
+            };
+            const res = await fetch(
+                'http://localhost:8080/auth/login',
+                sessionOptions,
+            );
+
+            if (!res.ok) {
+                const text = await res.text();
+                return { apiError: text };
+            } else {
+                // Redirect to the home page after successful signup
+                return { success: true };
+            }
         }
     } catch (err) {
-        console.error('Network error during signup', err);
+        console.error('Network error during sign up', err);
+        return { apiError: 'Network error' };
+    }
+}
+
+export async function signin(state: SigninFormState, formData: FormData) {
+    // Validate form fields
+    const validatedFields = SigninFormSchema.safeParse({
+        email: formData.get('email'),
+        password: formData.get('password'),
+    });
+
+    // If any form fields are invalid, return early
+    if (!validatedFields.success) {
+        return {
+            errors: z.treeifyError(validatedFields.error).properties,
+        };
+    }
+
+    // Prepare data for the login request
+    const { email, password } = validatedFields.data;
+
+    const options: RequestInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+        cache: 'no-store',
+        credentials: 'include',
+    };
+
+    try {
+        const res = await fetch('http://localhost:8080/auth/login', options);
+        console.log(res);
+        if (!res.ok) {
+            const text = await res.text();
+            return { apiError: text };
+        } else {
+            // Redirect to the home page after successful signup
+            return { success: true };
+        }
+    } catch (err) {
+        console.error('Network error during sign in', err);
         return { apiError: 'Network error' };
     }
 }

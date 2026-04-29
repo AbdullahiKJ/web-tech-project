@@ -9,8 +9,8 @@ $routes->get('/', 'Home::index');
 $routes->get('/api/test', 'Api::test');
 
 // Session Routes
-$routes->post('/auth/login/(:segment)', 'Auth::login');
-$routes->post('/auth/logout/(:segment)', 'Auth::logout');
+$routes->post('/auth/login', 'Auth::login');
+$routes->post('/auth/logout', 'Auth::logout');
 $routes->get('/auth/timeout', 'Auth::timeout');
 $routes->get('/auth', 'Auth::me');
 

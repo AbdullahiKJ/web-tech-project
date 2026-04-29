@@ -53,6 +53,31 @@ export type SignupFormState =
       }
     | undefined;
 
+export const SigninFormSchema = z.object({
+    email: z.email({ error: 'Please enter a valid email.' }).trim(),
+    password: z
+        .string()
+        .min(1, { error: 'Please enter your password.' })
+        .trim(),
+});
+
+export type SigninFormState =
+    | {
+          errors?: {
+              email?:
+                  | {
+                        errors: string[];
+                    }
+                  | undefined;
+              password?:
+                  | {
+                        errors: string[];
+                    }
+                  | undefined;
+          };
+      }
+    | undefined;
+
 export const ReviewFormSchema = z.object({
     rating: z
         .number()
