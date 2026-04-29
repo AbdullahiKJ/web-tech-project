@@ -2,9 +2,10 @@
 
 import { Search, CircleUser, Clock, Star } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
+import { AuthContext } from '@/app/providers/AuthProvider';
 
 type NavItem = {
     title?: string;
@@ -31,6 +32,9 @@ const mainNavItems: NavItem[] = [
 ];
 
 export function AppHeader() {
+    // Get the auth context to determine if the user is logged in
+    const authContext = useContext(AuthContext);
+
     const [query, setQuery] = useState('');
     const router = useRouter();
 
@@ -39,6 +43,21 @@ export function AppHeader() {
         e.preventDefault();
         // Navigate to the search page if there is a valid query
         if (query != '') router.push(`/search?page=1&query=${query}`);
+    }
+
+    function handleSignOut() {
+        if (authContext?.user?.id) {
+            // fetch the sign out endpoint
+            fetch('http://localhost:8080/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            }).then(() => {
+                // Clear the user from the auth context
+                authContext.setUser(null);
+                // Navigate to the home page
+                router.push('/');
+            });
+        }
     }
 
     return (
@@ -118,8 +137,12 @@ export function AppHeader() {
                             <Search />
                         </button>
                     </form>
-                    <Link href="/sign-in" className="btn">
-                        Log in
+                    <Link
+                        href={authContext?.user?.id ? '' : '/sign-in'}
+                        className="btn"
+                        onClick={handleSignOut}
+                    >
+                        {authContext?.user?.id ? 'Log out' : 'Log in'}
                     </Link>
                     <ThemeToggle />
                 </div>

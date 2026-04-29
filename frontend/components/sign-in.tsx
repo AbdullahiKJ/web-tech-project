@@ -2,15 +2,20 @@
 
 import Link from 'next/link';
 import { signin } from '@/app/actions/auth';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import { AuthContext } from '@/app/providers/AuthProvider';
 
 export default function SignIn() {
+    const authContext = useContext(AuthContext);
     const [state, action, pending] = useActionState(signin, undefined);
     const router = useRouter();
 
     useEffect(() => {
-        if (state?.success) router.push('/featured');
+        if (state?.success) {
+            authContext?.refreshUser();
+            router.push('/featured');
+        }
     }, [state, router]);
 
     return (

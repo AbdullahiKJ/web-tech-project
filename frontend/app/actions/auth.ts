@@ -110,3 +110,23 @@ export async function signin(state: SigninFormState, formData: FormData) {
         return { apiError: 'Network error' };
     }
 }
+
+export async function getCurrentUser() {
+    const res = await fetch(`http://localhost:8080/auth`, {
+        credentials: 'include',
+        cache: 'no-store',
+    });
+
+    if (!res.ok) return null;
+
+    return res.json();
+}
+
+export async function refreshSession() {
+    const res = await fetch(`http://localhost:8080/auth/timeout`, {
+        credentials: 'include',
+        cache: 'no-store',
+    });
+
+    return res.ok;
+}
