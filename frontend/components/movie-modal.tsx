@@ -20,8 +20,13 @@ interface Props {
 }
 
 // Fetch the user's watchlist and check if the movie is in it
-async function isInWatchList(movieId: string): Promise<boolean> {
-    const data = await fetch('http://localhost:8080/watchlist/1');
+async function isInWatchList(
+    movieId: string,
+    userId: number | null,
+): Promise<boolean> {
+    if (userId == null) return false;
+
+    const data = await fetch(`http://localhost:8080/watchlist/${userId}`);
     const response = await data.json();
     const watchlist = response.movies;
 
@@ -32,12 +37,18 @@ async function isInWatchList(movieId: string): Promise<boolean> {
 // Send a request to add/remove the movie from the user's watchlist
 export async function sendWatchlistRequest(
     movieId: string,
+    userId: number | null,
     action: 'add' | 'remove',
 ): Promise<void> {
+    if (userId == null) return;
+
     const options: RequestInit = {
         method: action === 'add' ? 'POST' : 'DELETE',
     };
-    await fetch(`http://localhost:8080/watchlist/1/${movieId}`, options);
+    await fetch(
+        `http://localhost:8080/watchlist/${userId}/${movieId}`,
+        options,
+    );
 }
 
 // Fetch the reviews for a movie
@@ -73,21 +84,27 @@ export default function MovieModal(props: Props) {
         )?.showModal();
 
         // Check if the movie is in the user's watchlist
-        const result = await isInWatchList(String(props.movie.id));
+        const result = await isInWatchList(
+            String(props.movie.id),
+            authContext?.user?.id,
+        );
         setInWatchlist(result);
 
         // Fetch the reviews for the movie
         const reviews = await fetchReviews(String(props.movie.id));
 
         // Check if the user has already reviewed the movie
-        // todo: replace with current user's id
-        const userReview = reviews.find(
-            (review: ReviewProps) => review.user_id === '1',
-        );
+        let userReview = null;
+        if (authContext?.user?.id) {
+            userReview = reviews.find(
+                (review: ReviewProps) =>
+                    review.user_id === authContext?.user?.id.toString(),
+            );
+        }
 
         // Remove the user's review from the reviews list if it exists
         const filteredReviews = reviews.filter(
-            (review: ReviewProps) => review.user_id !== '1',
+            (review: ReviewProps) => review.user_id !== authContext?.user?.id,
         );
 
         // Set the reviews and user review state
@@ -109,6 +126,7 @@ export default function MovieModal(props: Props) {
         props.setIsOpen?.(true);
         await sendWatchlistRequest(
             String(props.movie.id),
+            authContext?.user?.id,
             inWatchlist ? 'remove' : 'add',
         );
         setInWatchlist(!inWatchlist);
