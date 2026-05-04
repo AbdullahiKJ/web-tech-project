@@ -134,7 +134,7 @@ export function AppHeader() {
                             className="input-bordered input w-24 md:w-auto"
                         />
                         <button type="submit">
-                            <Search />
+                            <Search aria-label="search" />
                         </button>
                     </form>
                     <Link
