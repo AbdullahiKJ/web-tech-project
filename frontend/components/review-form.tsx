@@ -1,6 +1,8 @@
 import { Movie, ReviewFormState } from '@/app/lib/definitions';
 import { ReviewProps } from './review';
 import RatingInput from './rating-input';
+import { useContext } from 'react';
+import { AuthContext } from '@/app/providers/AuthProvider';
 
 interface Props {
     movie: Movie;
@@ -10,6 +12,8 @@ interface Props {
     state?: ReviewFormState;
 }
 export default function ReviewForm(props: Props) {
+    const authContext = useContext(AuthContext);
+
     return (
         // Review form
         <div className="flex flex-col gap-5">
@@ -20,8 +24,11 @@ export default function ReviewForm(props: Props) {
                     type="hidden"
                     value={String(props.movie.id)}
                 />
-                <input name="user_id" type="hidden" value={1} />{' '}
-                {/* Replace with actual user ID */}
+                <input
+                    name="user_id"
+                    type="hidden"
+                    value={authContext?.user?.id ?? 1}
+                />{' '}
                 <input
                     name="review_id"
                     type="hidden"
