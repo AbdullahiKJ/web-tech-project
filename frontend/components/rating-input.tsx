@@ -105,7 +105,12 @@ export default function RatingInput(props: Props) {
                     </button>
                 );
             })}
-            <input type="hidden" name="rating" value={selectedRating} />
+            <input
+                type="hidden"
+                name="rating"
+                value={selectedRating}
+                data-testid="rating-value"
+            />
         </div>
     );
 }
