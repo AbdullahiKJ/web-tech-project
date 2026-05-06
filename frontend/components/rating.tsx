@@ -1,39 +1,41 @@
-import { ReactElement } from 'react';
-
+import { FullStar, EmptyStar, HalfStar } from './rating-input';
 interface Props {
-    rating: number;
     size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    rating: number;
 }
 
-export default function Rating(props: Props) {
-    // Round to nearest 0.5
-    const halfRating = Math.round(props.rating * 2) / 2;
-    const stars: ReactElement[] = [];
+const sizeMap = {
+    xs: 'w-4 h-4',
+    sm: 'w-5 h-5',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
+    xl: 'w-10 h-10',
+};
 
-    for (let i = 0; i <= 10; i++) {
-        const value = i / 2;
-        if (value === 0) {
-            stars.push(
-                <div
-                    className="rating-hidden w-0"
-                    aria-label={`${value} star`}
-                    aria-current={halfRating === value}
-                    key={i}
-                />,
-            );
-        } else {
-            stars.push(
-                <div
-                    className={`mask mask-star-2 mask-half-${i % 2 === 0 ? '2' : '1'}`}
-                    aria-label={`${value} star`}
-                    aria-current={halfRating === value}
-                    key={i}
-                ></div>,
-            );
-        }
-    }
-
+export default function RatingDisplay({ size, rating }: Props) {
+    const halfRating = Math.floor(rating * 2) / 2; // Round to nearest 0.5
     return (
-        <div className={`rating rating-half rating-${props.size}`}>{stars}</div>
+        <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((star) => {
+                let fillType: 'empty' | 'half' | 'full';
+                if (halfRating >= star) {
+                    fillType = 'full';
+                } else if (halfRating >= star - 0.5) {
+                    fillType = 'half';
+                } else {
+                    fillType = 'empty';
+                }
+
+                return (
+                    <div key={star} className={sizeMap[size]}>
+                        {fillType === 'full' && <FullStar />}
+                        {fillType === 'half' && (
+                            <HalfStar id={`display-half-${star}`} />
+                        )}
+                        {fillType === 'empty' && <EmptyStar />}
+                    </div>
+                );
+            })}
+        </div>
     );
 }
