@@ -1,6 +1,6 @@
 'use client';
 
-import MovieModal from '@/components/movie-modal';
+import { MovieModal } from '@/components/movie-modal';
 import { ReactNode, useEffect, useState } from 'react';
 import { Movie } from '../lib/definitions';
 import Pagination from '@/components/pagination';

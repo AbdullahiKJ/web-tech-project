@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Movie } from '../lib/definitions';
-import MovieModal from '@/components/movie-modal';
+import { MovieModal } from '@/components/movie-modal';
 import Pagination from '@/components/pagination';
 
 export default function Home() {

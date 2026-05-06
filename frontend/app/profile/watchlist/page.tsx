@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { Movie } from '@/app/lib/definitions';
-import MovieModal from '@/components/movie-modal';
+import { MovieModal } from '@/components/movie-modal';
 import { Trash } from 'lucide-react';
 import Menu from '@/components/menu';
 import { AuthContext } from '@/app/providers/AuthProvider';

@@ -2,7 +2,14 @@
 import { ReviewProps } from '@/components/review';
 import Review from '@/components/review';
 import Rating from '@/components/rating';
-import { useEffect, useActionState, useState, useContext } from 'react';
+import {
+    useEffect,
+    useActionState,
+    useState,
+    useContext,
+    forwardRef,
+    useRef,
+} from 'react';
 import { createReview } from '@/app/actions/reviews';
 import { Movie } from '@/app/lib/definitions';
 import ReviewForm from './review-form';
@@ -58,7 +65,9 @@ async function fetchReviews(movieId: string) {
     return response.reviews;
 }
 
-export default function MovieModal(props: Props) {
+export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
     // Get auth context
     const authContext = useContext(AuthContext);
 
@@ -77,11 +86,12 @@ export default function MovieModal(props: Props) {
 
     async function handleOpenModal() {
         // Show the modal
-        (
-            document.getElementById(
-                String(props.movie.id),
-            ) as HTMLDialogElement | null
-        )?.showModal();
+        // (
+        //     document.getElementById(
+        //         String(props.movie.id),
+        //     ) as HTMLDialogElement | null
+        // )?.showModal();
+        dialogRef.current?.showModal();
 
         // Check if the movie is in the user's watchlist
         const result = await isInWatchList(
@@ -166,6 +176,7 @@ export default function MovieModal(props: Props) {
                 type="button"
                 onClick={handleOpenModal}
                 className="cursor-pointer"
+                data-testid={'open-modal-button'}
             >
                 {/* Mobile */}
                 <img
@@ -185,7 +196,12 @@ export default function MovieModal(props: Props) {
                 />
             </button>
             {/* Modal */}
-            <dialog className="modal" id={String(props.movie.id)}>
+            <dialog
+                ref={dialogRef}
+                className="modal"
+                id={String(props.movie.id)}
+                data-testid={props.movie.id}
+            >
                 <div className="modal-box grid h-4/5 max-w-6xl grid-cols-6 gap-10 overflow-hidden sm:h-3/5 xl:h-10/12">
                     {/* Image and Buttons */}
                     <div className="col-span-2 flex flex-col items-center gap-10">
@@ -199,6 +215,7 @@ export default function MovieModal(props: Props) {
                         <button
                             className="btn h-auto w-full btn-outline"
                             onClick={handleReview}
+                            data-testid="review-button"
                         >
                             {!reviewing
                                 ? userReview
@@ -209,6 +226,7 @@ export default function MovieModal(props: Props) {
                         <button
                             className="btn h-auto w-full btn-outline"
                             onClick={handleWatchlist}
+                            data-testid="watchlist-button"
                         >
                             {inWatchlist ? 'Remove from' : 'Add to'} watchlist
                         </button>
@@ -275,13 +293,15 @@ export default function MovieModal(props: Props) {
                 <form method="dialog" className="modal-backdrop">
                     <button
                         onClick={() => {
+                            dialogRef.current?.close();
                             setReviewing(false);
                             props.setIsOpen(false);
                             props.onExitModal?.();
                         }}
+                        data-testid="close-modal-button"
                     ></button>
                 </form>
             </dialog>
         </div>
     );
-}
+});

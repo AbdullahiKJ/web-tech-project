@@ -1,6 +1,6 @@
 import { Movie } from '@/app/lib/definitions';
 import { DeleteModal } from './delete-modal';
-import MovieModal from './movie-modal';
+import { MovieModal } from './movie-modal';
 import Rating from './rating';
 import { ReviewProps } from './review';
 import { Pencil, Trash } from 'lucide-react';
