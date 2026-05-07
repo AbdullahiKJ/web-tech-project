@@ -1,15 +1,25 @@
+import { AuthContext } from '@/app/providers/AuthProvider';
 import { Bookmark, MessageCircleMore } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import {
+    useEffect,
+    useState,
+    forwardRef,
+    useImperativeHandle,
+    useContext,
+} from 'react';
 
 export default forwardRef(function Menu(props, ref) {
+    const authContext = useContext(AuthContext);
+
     const [watchlistCount, setWatchlistCount] = useState(0);
     const [reviewCount, setReviewCount] = useState(0);
 
     async function fetchReviews() {
         // Get a list of the user's reviews
-        // todo: replace with the current user's id
-        const res = await fetch('http://localhost:8080/reviews/users/1');
+        const res = await fetch(
+            `http://localhost:8080/reviews/users/${authContext?.user?.id}`,
+        );
         const json = await res.json();
 
         // Set the review count
@@ -18,8 +28,9 @@ export default forwardRef(function Menu(props, ref) {
 
     async function fetchWatchlist() {
         // Get a list of the user's watchlist items
-        // todo: replace with the current user's id
-        const res = await fetch('http://localhost:8080/watchlist/1');
+        const res = await fetch(
+            `http://localhost:8080/watchlist/${authContext?.user?.id}`,
+        );
         const json = await res.json();
 
         // Set the watchlist count

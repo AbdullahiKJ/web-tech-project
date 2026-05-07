@@ -122,6 +122,7 @@ export type ReviewFormState =
 export const UserFormSchema = z.object({
     name: z.string().min(1, { error: 'Name is required.' }),
     display_name: z.string().min(1, { error: 'Display Name is required.' }),
+    user_id: z.string().min(1, { error: 'User ID is required.' }),
 });
 
 export type UserFormState =
@@ -133,6 +134,11 @@ export type UserFormState =
                     }
                   | undefined;
               display_name?:
+                  | {
+                        errors: string[];
+                    }
+                  | undefined;
+              user_id?:
                   | {
                         errors: string[];
                     }
@@ -160,6 +166,7 @@ export const PasswordFormSchema = z
             .string()
             .min(1, { error: 'Please confirm your password.' })
             .trim(),
+        user_id: z.string().min(1, { error: 'User ID is required.' }),
     })
     .refine((values) => values.password === values.confirm_password, {
         error: 'Passwords do not match.',
@@ -180,6 +187,11 @@ export type PasswordFormState =
                     }
                   | undefined;
               confirm_password?:
+                  | {
+                        errors: string[];
+                    }
+                  | undefined;
+              user_id?:
                   | {
                         errors: string[];
                     }

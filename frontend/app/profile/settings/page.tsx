@@ -14,12 +14,18 @@ import {
 import { redirect } from 'next/navigation';
 import { AuthContext } from '@/app/providers/AuthProvider';
 
-async function deleteUserAccount() {
-    const res = await fetch('http://localhost:8080/users/1', {
+async function deleteUserAccount(userId?: number) {
+    if (userId === undefined) return;
+
+    const res = await fetch(`http://localhost:8080/users/${userId}`, {
         method: 'DELETE',
     });
     if (res.ok) {
-        // todo: sign out the user and redirect to the featured page
+        // sign out the user and redirect to the featured page
+        await fetch('http://localhost:8080/auth/sign-out', {
+            method: 'POST',
+        });
+        redirect('/');
     }
 }
 
@@ -46,12 +52,18 @@ export default function Home() {
 
     const fetchUserName = useCallback(async () => {
         // Get the user's name and display name
-        const res = await fetch('http://localhost:8080/users/1');
+        const res = await fetch(
+            `http://localhost:8080/users/${authContext?.user?.id}`,
+        );
         const json = await res.json();
 
         setName(json.name);
         setDisplayName(json.display_name);
     }, []);
+
+    function handleDeleteAccount() {
+        deleteUserAccount(authContext?.user?.id);
+    }
 
     // Get the user's name and display name when the component loads
     useEffect(() => {
@@ -145,6 +157,13 @@ export default function Home() {
                                     {nameState.errors.display_name.errors[0]}
                                 </p>
                             )}
+                            {/* Hidden user id input */}
+                            <input
+                                type="hidden"
+                                name="user_id"
+                                defaultValue={authContext?.user?.id}
+                                value={authContext?.user?.id}
+                            />
                             <hr />
                             <button className="btn btn-primary" type="submit">
                                 Save
@@ -174,7 +193,7 @@ export default function Home() {
                                 </p>
                                 <button
                                     className="btn btn-error"
-                                    onClick={deleteUserAccount}
+                                    onClick={handleDeleteAccount}
                                 >
                                     Delete Account
                                 </button>
@@ -249,6 +268,13 @@ export default function Home() {
                                     }
                                 </p>
                             )}
+                            {/* Hidden user id input */}
+                            <input
+                                type="hidden"
+                                name="user_id"
+                                defaultValue={authContext?.user?.id}
+                                value={authContext?.user?.id}
+                            />
                             <hr />
                             <button className="btn btn-primary" type="submit">
                                 Update Password
