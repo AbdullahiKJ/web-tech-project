@@ -97,7 +97,6 @@ export async function signin(state: SigninFormState, formData: FormData) {
 
     try {
         const res = await fetch('http://localhost:8080/auth/login', options);
-        console.log(res);
         if (!res.ok) {
             const text = await res.text();
             return { apiError: text };

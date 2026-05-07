@@ -259,13 +259,14 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
                                         />
                                     )}
                                     {/* Other Reviews */}
-                                    {reviews.map((review: any) => (
+                                    {reviews.map((review: ReviewProps) => (
                                         <Review
                                             key={review.id}
                                             rating={review.rating}
                                             review_description={
                                                 review.review_description
                                             }
+                                            user_id={review.user_id}
                                         />
                                     ))}
                                     {/* No Reviews Placeholder */}

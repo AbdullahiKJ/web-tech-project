@@ -36,6 +36,21 @@ export default function Home() {
         redirect('/sign-in');
     }
 
+    function handleSignOut() {
+        if (authContext?.user?.id) {
+            // fetch the sign out endpoint
+            fetch('http://localhost:8080/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            }).then(() => {
+                // Clear the user from the auth context
+                authContext.setUser(null);
+                // Navigate to the home page
+                redirect('/');
+            });
+        }
+    }
+
     const [nameState, nameAction, namePending] = useActionState(
         updateUserNames,
         undefined,
@@ -136,7 +151,8 @@ export default function Home() {
                                 name="name"
                                 className="input"
                                 placeholder="Name"
-                                defaultValue={name}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                             />
                             {/* Name Errors */}
                             {nameState?.errors?.name && (
@@ -149,7 +165,8 @@ export default function Home() {
                                 name="display_name"
                                 className="input"
                                 placeholder="Display Name"
-                                defaultValue={displayName}
+                                value={displayName}
+                                onChange={(e) => setDisplayName(e.target.value)}
                             />
                             {/* Display Name Errors */}
                             {nameState?.errors?.display_name && (
@@ -161,7 +178,6 @@ export default function Home() {
                             <input
                                 type="hidden"
                                 name="user_id"
-                                defaultValue={authContext?.user?.id}
                                 value={authContext?.user?.id}
                             />
                             <hr />
@@ -272,7 +288,6 @@ export default function Home() {
                             <input
                                 type="hidden"
                                 name="user_id"
-                                defaultValue={authContext?.user?.id}
                                 value={authContext?.user?.id}
                             />
                             <hr />
@@ -281,7 +296,12 @@ export default function Home() {
                             </button>
                         </form>
                         <hr />
-                        <button className="btn btn-error">Sign Out</button>
+                        <button
+                            className="btn btn-error"
+                            onClick={handleSignOut}
+                        >
+                            Sign Out
+                        </button>
                     </div>
                 </div>
                 {/* Display Toast notifications */}
