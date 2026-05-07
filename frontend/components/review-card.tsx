@@ -10,6 +10,7 @@ interface CardProps {
     movie: Movie;
     review: ReviewProps;
     onDelete: (data: string | undefined) => Promise<void>;
+    onUpdate: () => Promise<void>;
 }
 
 export default function ReviewCard(props: CardProps) {
@@ -32,9 +33,10 @@ export default function ReviewCard(props: CardProps) {
                 movie={props.movie}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                review={reviewing ? props.review : undefined}
+                review={props.review ?? undefined}
                 onExitModal={closeModal}
                 isEditing={reviewing ? true : false}
+                onUpdateReview={props.onUpdate}
             />
             {/* Movie/Review Info */}
             <div className="flex grow flex-row sm:gap-5">

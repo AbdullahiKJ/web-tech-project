@@ -92,6 +92,7 @@ export default function Home() {
                                 movie={movie}
                                 onDelete={handleDelete}
                                 key={review.id}
+                                onUpdate={fetchReviews}
                             />
                         ))}
                     </div>

@@ -24,6 +24,7 @@ interface Props {
     onExitModal?: () => void;
     isEditing?: boolean;
     onUpdateWatchList?: () => void;
+    onUpdateReview?: () => void;
 }
 
 // Fetch the user's watchlist and check if the movie is in it
@@ -86,11 +87,6 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
 
     async function handleOpenModal() {
         // Show the modal
-        // (
-        //     document.getElementById(
-        //         String(props.movie.id),
-        //     ) as HTMLDialogElement | null
-        // )?.showModal();
         dialogRef.current?.showModal();
 
         // Check if the movie is in the user's watchlist
@@ -150,9 +146,9 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
         if (state?.success) {
             setReviewing(false);
             // Refresh the reviews list
-            fetchReviews(String(props.movie.id)).then(
-                (reviews: ReviewProps[]) => setReviews(reviews),
-            );
+            handleOpenModal();
+            // Call the onUpdateReview method if it exists
+            props.onUpdateReview?.();
         }
     }, [state]);
 
@@ -284,8 +280,9 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
                             // Review form
                             <ReviewForm
                                 movie={props.movie}
-                                isEditing={false}
+                                isEditing={userReview != null}
                                 action={action}
+                                review={userReview}
                             />
                         )}
                     </div>
