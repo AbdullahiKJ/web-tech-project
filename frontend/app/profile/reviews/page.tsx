@@ -34,7 +34,9 @@ export default function Home() {
         setLoading(true);
 
         // Get a list of the user's reviews
-        const res = await fetch('http://localhost:8080/reviews/users/1');
+        const res = await fetch(
+            `http://localhost:8080/reviews/users/${authContext?.user?.id}`,
+        );
         const json = await res.json();
 
         // Fetch each movie

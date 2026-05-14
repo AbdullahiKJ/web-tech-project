@@ -41,7 +41,9 @@ export default function Home() {
         setLoading(true);
 
         // Get a list of the user's watchlist
-        const res = await fetch('http://localhost:8080/watchlist/1');
+        const res = await fetch(
+            `http://localhost:8080/watchlist/${authContext?.user?.id}`,
+        );
         const json = await res.json();
 
         // Fetch each movie
