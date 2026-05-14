@@ -38,7 +38,7 @@ export async function createReview(state: ReviewFormState, formData: FormData) {
 
     try {
         const path =
-            'http://localhost:8080/reviews' +
+            `${process.env.NEXT_PUBLIC_API_URL}/reviews` +
             (isEditing ? `/${review_id}` : '');
         const res = await fetch(path, options);
         if (!res.ok) {

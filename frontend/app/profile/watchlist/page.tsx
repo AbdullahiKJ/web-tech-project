@@ -42,7 +42,7 @@ export default function Home() {
 
         // Get a list of the user's watchlist
         const res = await fetch(
-            `http://localhost:8080/watchlist/${authContext?.user?.id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/watchlist/${authContext?.user?.id}`,
         );
         const json = await res.json();
 
@@ -70,9 +70,12 @@ export default function Home() {
 
     async function handleDelete(movieId: string | undefined) {
         if (movieId != null) {
-            await fetch(`http://localhost:8080/watchlist/1/${movieId}`, {
-                method: 'DELETE',
-            });
+            await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/watchlist/1/${movieId}`,
+                {
+                    method: 'DELETE',
+                },
+            );
 
             // update the watchlist list
             const newWatchlist = watchlist.filter(

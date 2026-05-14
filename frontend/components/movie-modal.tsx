@@ -34,7 +34,9 @@ async function isInWatchList(
 ): Promise<boolean> {
     if (userId == null) return false;
 
-    const data = await fetch(`http://localhost:8080/watchlist/${userId}`);
+    const data = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/watchlist/${userId}`,
+    );
     const response = await data.json();
     const watchlist = response.movies;
 
@@ -54,14 +56,16 @@ export async function sendWatchlistRequest(
         method: action === 'add' ? 'POST' : 'DELETE',
     };
     await fetch(
-        `http://localhost:8080/watchlist/${userId}/${movieId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/watchlist/${userId}/${movieId}`,
         options,
     );
 }
 
 // Fetch the reviews for a movie
 async function fetchReviews(movieId: string) {
-    const data = await fetch(`http://localhost:8080/reviews/movie/${movieId}`);
+    const data = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/reviews/movie/${movieId}`,
+    );
     const response = await data.json();
     return response.reviews;
 }

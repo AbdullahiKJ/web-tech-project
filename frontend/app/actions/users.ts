@@ -4,7 +4,6 @@ import {
     UserFormSchema,
     UserFormState,
 } from '@/app/lib/definitions';
-import { use } from 'react';
 import * as z from 'zod';
 
 export async function updateUserNames(
@@ -38,7 +37,7 @@ export async function updateUserNames(
     };
 
     try {
-        const path = `http://localhost:8080/users/name/${user_id}`;
+        const path = `${process.env.NEXT_PUBLIC_API_URL}/users/name/${user_id}`;
         const res = await fetch(path, options);
         if (!res.ok) {
             const text = await res.text();
@@ -87,7 +86,7 @@ export async function updateUserPassword(
     };
 
     try {
-        const path = `http://localhost:8080/users/password/${user_id}`;
+        const path = `${process.env.NEXT_PUBLIC_API_URL}/users/password/${user_id}`;
         const res = await fetch(path, options);
         if (!res.ok) {
             const text = await res.text();

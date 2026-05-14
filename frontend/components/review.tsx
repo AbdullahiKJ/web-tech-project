@@ -21,7 +21,7 @@ export default function Review(props: ReviewProps) {
             if (props.user_id) {
                 try {
                     const res = await fetch(
-                        `http://localhost:8080/users/${props.user_id}`,
+                        `${process.env.NEXT_PUBLIC_API_URL}/users/${props.user_id}`,
                     );
                     if (res.ok) {
                         const json = await res.json();

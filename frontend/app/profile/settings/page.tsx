@@ -17,12 +17,15 @@ import { AuthContext } from '@/app/providers/AuthProvider';
 async function deleteUserAccount(userId?: number) {
     if (userId === undefined) return;
 
-    const res = await fetch(`http://localhost:8080/users/${userId}`, {
-        method: 'DELETE',
-    });
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        {
+            method: 'DELETE',
+        },
+    );
     if (res.ok) {
         // sign out the user and redirect to the featured page
-        await fetch('http://localhost:8080/auth/sign-out', {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-out`, {
             method: 'POST',
         });
         redirect('/');
@@ -39,7 +42,7 @@ export default function Home() {
     function handleSignOut() {
         if (authContext?.user?.id) {
             // fetch the sign out endpoint
-            fetch('http://localhost:8080/auth/logout', {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include',
             }).then(() => {
@@ -68,7 +71,7 @@ export default function Home() {
     const fetchUserName = useCallback(async () => {
         // Get the user's name and display name
         const res = await fetch(
-            `http://localhost:8080/users/${authContext?.user?.id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/users/${authContext?.user?.id}`,
         );
         const json = await res.json();
 

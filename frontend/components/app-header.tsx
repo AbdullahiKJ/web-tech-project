@@ -48,7 +48,7 @@ export function AppHeader() {
     function handleSignOut() {
         if (authContext?.user?.id) {
             // fetch the sign out endpoint
-            fetch('http://localhost:8080/auth/logout', {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include',
             }).then(() => {

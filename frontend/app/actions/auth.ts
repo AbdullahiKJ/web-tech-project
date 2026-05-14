@@ -35,7 +35,10 @@ export async function signup(state: SignupFormState, formData: FormData) {
     };
 
     try {
-        const res = await fetch('http://localhost:8080/users', options);
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/users`,
+            options,
+        );
         if (!res.ok) {
             const text = await res.text();
             return { apiError: text };
@@ -50,7 +53,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
                 credentials: 'include',
             };
             const res = await fetch(
-                'http://localhost:8080/auth/login',
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
                 sessionOptions,
             );
 
@@ -96,7 +99,10 @@ export async function signin(state: SigninFormState, formData: FormData) {
     };
 
     try {
-        const res = await fetch('http://localhost:8080/auth/login', options);
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            options,
+        );
         if (!res.ok) {
             const text = await res.text();
             return { apiError: text };
@@ -111,7 +117,7 @@ export async function signin(state: SigninFormState, formData: FormData) {
 }
 
 export async function getCurrentUser() {
-    const res = await fetch(`http://localhost:8080/auth`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
         credentials: 'include',
         cache: 'no-store',
     });
@@ -122,7 +128,7 @@ export async function getCurrentUser() {
 }
 
 export async function refreshSession() {
-    const res = await fetch(`http://localhost:8080/auth/timeout`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/timeout`, {
         credentials: 'include',
         cache: 'no-store',
     });

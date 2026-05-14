@@ -35,7 +35,7 @@ export default function Home() {
 
         // Get a list of the user's reviews
         const res = await fetch(
-            `http://localhost:8080/reviews/users/${authContext?.user?.id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/reviews/users/${authContext?.user?.id}`,
         );
         const json = await res.json();
 
@@ -62,9 +62,12 @@ export default function Home() {
 
     async function handleDelete(reviewId: string | undefined) {
         if (reviewId != null) {
-            await fetch(`http://localhost:8080/reviews/${reviewId}`, {
-                method: 'DELETE',
-            });
+            await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/reviews/${reviewId}`,
+                {
+                    method: 'DELETE',
+                },
+            );
 
             // update the review list
             const newReviews = data.filter(

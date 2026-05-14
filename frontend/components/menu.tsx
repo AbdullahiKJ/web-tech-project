@@ -18,7 +18,7 @@ export default forwardRef(function Menu(props, ref) {
     async function fetchReviews() {
         // Get a list of the user's reviews
         const res = await fetch(
-            `http://localhost:8080/reviews/users/${authContext?.user?.id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/reviews/users/${authContext?.user?.id}`,
         );
         const json = await res.json();
 
@@ -29,7 +29,7 @@ export default forwardRef(function Menu(props, ref) {
     async function fetchWatchlist() {
         // Get a list of the user's watchlist items
         const res = await fetch(
-            `http://localhost:8080/watchlist/${authContext?.user?.id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/watchlist/${authContext?.user?.id}`,
         );
         const json = await res.json();
 
