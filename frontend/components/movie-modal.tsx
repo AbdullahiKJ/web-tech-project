@@ -118,6 +118,13 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
         setUserReview(userReview);
     }
 
+    function handleCloseModal() {
+        dialogRef.current?.close();
+        setReviewing(false);
+        props.setIsOpen(false);
+        props.onExitModal?.();
+    }
+
     function handleReview() {
         // Redirect to the login page if the user is not authenticated
         if (authContext?.user?.id == null) redirect('/sign-in');
@@ -198,7 +205,15 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
                 id={String(props.movie.id)}
                 data-testid={props.movie.id}
             >
-                <div className="modal-box grid h-4/5 max-w-6xl grid-cols-6 gap-10 overflow-hidden sm:h-3/5 xl:h-10/12">
+                <div className="relative modal-box grid h-4/5 max-w-6xl grid-cols-6 gap-10 overflow-hidden sm:h-3/5 xl:h-10/12">
+                    {/* Button to close the modal */}
+                    <button
+                        className="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm"
+                        onClick={handleCloseModal}
+                        data-testid="close-modal-button-2"
+                    >
+                        ✕
+                    </button>
                     {/* Image and Buttons */}
                     <div className="col-span-2 flex flex-col items-center gap-10">
                         <img
@@ -290,12 +305,7 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button
-                        onClick={() => {
-                            dialogRef.current?.close();
-                            setReviewing(false);
-                            props.setIsOpen(false);
-                            props.onExitModal?.();
-                        }}
+                        onClick={handleCloseModal}
                         data-testid="close-modal-button"
                     ></button>
                 </form>
