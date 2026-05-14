@@ -205,102 +205,109 @@ export const MovieModal = forwardRef<HTMLDialogElement, Props>((props, ref) => {
                 id={String(props.movie.id)}
                 data-testid={props.movie.id}
             >
-                <div className="relative modal-box grid h-4/5 max-w-6xl grid-cols-6 gap-10 overflow-hidden sm:h-3/5 xl:h-10/12">
+                <div className="relative modal-box max-h-[90vh] w-11/12 max-w-7xl overflow-y-auto p-4 sm:p-6">
                     {/* Button to close the modal */}
-                    <button
-                        className="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm"
-                        onClick={handleCloseModal}
-                        data-testid="close-modal-button-2"
-                    >
-                        ✕
-                    </button>
-                    {/* Image and Buttons */}
-                    <div className="col-span-2 flex flex-col items-center gap-10">
-                        <img
-                            className="rounded-xl"
-                            src={`${baseImgUrl}${props.movie.poster_path}`}
-                            alt={props.movie.title}
-                            width={250}
-                            height={20}
-                        />
+                    <div className="sticky top-0 z-20 flex justify-end bg-transparent pb-2">
                         <button
-                            className="btn h-auto w-full btn-outline"
-                            onClick={handleReview}
-                            data-testid="review-button"
+                            className="btn btn-circle btn-sm"
+                            onClick={handleCloseModal}
+                            data-testid="close-modal-button-2"
                         >
-                            {!reviewing
-                                ? userReview
-                                    ? 'Edit Review'
-                                    : 'Leave a review'
-                                : 'View Movie'}
-                        </button>
-                        <button
-                            className="btn h-auto w-full btn-outline"
-                            onClick={handleWatchlist}
-                            data-testid="watchlist-button"
-                        >
-                            {inWatchlist ? 'Remove from' : 'Add to'} watchlist
+                            ✕
                         </button>
                     </div>
-                    {/* Description and reviews */}
-                    <div className="col-span-4 col-start-3 flex flex-col gap-5 overflow-hidden">
-                        <p className="text-3xl sm:text-5xl">
-                            {props.movie.title}
-                        </p>
-                        {/* Rating */}
-                        {!reviewing && (
-                            <Rating
-                                rating={props.movie.vote_average / 2}
-                                size={'xl'}
+
+                    {/* Grid */}
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                        {/* Left Panel: Image and Buttons */}
+                        <div className="flex flex-col items-center gap-4 sm:flex-row lg:flex-col lg:gap-6">
+                            <img
+                                className="w-32 rounded-xl sm:w-48 lg:w-full lg:max-w-[250px]"
+                                src={`${baseImgUrl}${props.movie.poster_path}`}
+                                alt={props.movie.title}
                             />
-                        )}
-                        {!reviewing ? (
-                            // Description
-                            <div className="flex flex-1 flex-col gap-5 overflow-hidden">
-                                <p className="text-lg sm:text-xl">Synopsis</p>
-                                <p className="shrink-0 text-sm">
-                                    {props.movie.overview}
-                                </p>
-                                {/* Reviews */}
-                                <p className="shrink-0 text-xl">Reviews</p>
-                                <div className="flex flex-1 flex-col overflow-y-auto">
-                                    {/* User Review */}
-                                    {userReview && (
-                                        <Review
-                                            rating={userReview.rating}
-                                            review_description={
-                                                userReview.review_description
-                                            }
-                                        />
-                                    )}
-                                    {/* Other Reviews */}
-                                    {reviews.map((review: ReviewProps) => (
-                                        <Review
-                                            key={review.id}
-                                            rating={review.rating}
-                                            review_description={
-                                                review.review_description
-                                            }
-                                            user_id={review.user_id}
-                                        />
-                                    ))}
-                                    {/* No Reviews Placeholder */}
-                                    {reviews.length == 0 && !userReview && (
-                                        <p className="text-l pt-10 text-center">
-                                            No Reviews. Be the first!
-                                        </p>
-                                    )}
+                            <button
+                                className="btn h-auto w-full btn-outline sm:w-auto lg:w-full"
+                                onClick={handleReview}
+                                data-testid="review-button"
+                            >
+                                {!reviewing
+                                    ? userReview
+                                        ? 'Edit Review'
+                                        : 'Leave a review'
+                                    : 'View Movie'}
+                            </button>
+                            <button
+                                className="btn h-auto w-full btn-outline sm:w-auto lg:w-full"
+                                onClick={handleWatchlist}
+                                data-testid="watchlist-button"
+                            >
+                                {inWatchlist ? 'Remove from' : 'Add to'}{' '}
+                                watchlist
+                            </button>
+                        </div>
+                        {/* Right Panel: Description and reviews */}
+                        <div className="flex min-h-0 flex-col gap-5 lg:col-span-2">
+                            <p className="text-3xl sm:text-5xl">
+                                {props.movie.title}
+                            </p>
+                            {/* Rating */}
+                            {!reviewing && (
+                                <Rating
+                                    rating={props.movie.vote_average / 2}
+                                    size={'xl'}
+                                />
+                            )}
+                            {!reviewing ? (
+                                // Description
+                                <div className="flex flex-1 flex-col gap-5 overflow-hidden">
+                                    <p className="text-lg sm:text-xl">
+                                        Synopsis
+                                    </p>
+                                    <p className="shrink-0 text-sm">
+                                        {props.movie.overview}
+                                    </p>
+                                    {/* Reviews */}
+                                    <p className="shrink-0 text-xl">Reviews</p>
+                                    <div className="flex-1 overflow-y-auto">
+                                        {/* User Review */}
+                                        {userReview && (
+                                            <Review
+                                                rating={userReview.rating}
+                                                review_description={
+                                                    userReview.review_description
+                                                }
+                                            />
+                                        )}
+                                        {/* Other Reviews */}
+                                        {reviews.map((review: ReviewProps) => (
+                                            <Review
+                                                key={review.id}
+                                                rating={review.rating}
+                                                review_description={
+                                                    review.review_description
+                                                }
+                                                user_id={review.user_id}
+                                            />
+                                        ))}
+                                        {/* No Reviews Placeholder */}
+                                        {reviews.length == 0 && !userReview && (
+                                            <p className="text-l pt-10 text-center">
+                                                No Reviews. Be the first!
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            // Review form
-                            <ReviewForm
-                                movie={props.movie}
-                                isEditing={userReview != null}
-                                action={action}
-                                review={userReview}
-                            />
-                        )}
+                            ) : (
+                                // Review form
+                                <ReviewForm
+                                    movie={props.movie}
+                                    isEditing={userReview != null}
+                                    action={action}
+                                    review={userReview}
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
