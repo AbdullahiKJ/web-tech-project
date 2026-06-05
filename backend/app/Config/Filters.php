@@ -107,10 +107,5 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [
-        'cors' => [
-            'before' => ['http://localhost:3000/*'],
-            'after'  => ['http://localhost:3000/*'],
-        ],
-    ];
+    public array $filters = [];
 }

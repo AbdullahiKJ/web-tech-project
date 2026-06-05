@@ -16,10 +16,11 @@ class Cors implements FilterInterface
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header('Access-Control-Allow-Credentials: true');
+        header('Vary: Origin');
         
         // Handle preflight requests
-        if ($request->getMethod() === 'OPTIONS') {
-            http_response_code(200);
+        if ($request->getMethod() === 'options') {
+            http_response_code(204);
             exit();
         }
     }
