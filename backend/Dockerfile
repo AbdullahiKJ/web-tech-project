@@ -1,10 +1,16 @@
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    unzip \
     git \
-    && docker-php-ext-install mysqli pdo pdo_mysql
+    unzip \
+    zip \
+    libzip-dev \
+    libicu-dev \
+    && docker-php-ext-install \
+        mysqli \
+        pdo \
+        pdo_mysql \
+        intl
 
 RUN a2enmod rewrite
 
