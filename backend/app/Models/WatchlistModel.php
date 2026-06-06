@@ -7,6 +7,7 @@ use CodeIgniter\Model;
 class WatchlistModel extends Model
 {
     protected $table = 'watchlist';
+    protected $useAutoIncrement = false;
     protected $allowedFields = ['user_id', 'movie_id'];
 
     public function getMovies($id)
