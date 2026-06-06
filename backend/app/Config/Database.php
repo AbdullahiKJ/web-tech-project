@@ -194,6 +194,14 @@ class Database extends Config
     {
         parent::__construct();
 
+        $this->default['hostname'] = getenv('database.default.hostname');
+        $this->default['username'] = getenv('database.default.username');
+        $this->default['password'] = getenv('database.default.password');
+        $this->default['database'] = getenv('database.default.database');
+        $this->default['DBDriver'] = getenv('database.default.DBDriver');
+        $this->default['DBDebug'] = (getenv('CI_ENVIRONMENT') !== 'production');
+        $this->default['port'] = getenv('database.default.port');
+
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
