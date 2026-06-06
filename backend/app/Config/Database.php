@@ -203,6 +203,11 @@ class Database extends Config
         $this->default['port'] = getenv('DB_PORT');
         $this->default['encrypt'] = ['sslmode' => 'require'];
 
+        if ($this->default['DBDriver'] === 'Postgre') {
+            $this->default['charset'] = 'utf8';
+            $this->default['DBCollat'] = '';
+        }
+
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
