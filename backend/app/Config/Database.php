@@ -198,7 +198,7 @@ class Database extends Config
         $this->default['username'] = getenv('DB_USERNAME');
         $this->default['password'] = getenv('DB_PASSWORD');
         $this->default['database'] = getenv('DB_NAME');
-        $this->default['DBDriver'] = getenv('DB_DRIVER') ?? (getenv('CI_ENVIRONMENT') !== 'production' ? 'MySQLi' : 'Postgre');
+        $this->default['DBDriver'] = getenv('DB_DRIVER') ?? 'Postgre';
         $this->default['DBDebug'] = (getenv('CI_ENVIRONMENT') !== 'production');
         $this->default['port'] = getenv('DB_PORT');
 
