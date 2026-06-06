@@ -194,13 +194,13 @@ class Database extends Config
     {
         parent::__construct();
 
-        $this->default['hostname'] = getenv('database.default.hostname');
-        $this->default['username'] = getenv('database.default.username');
-        $this->default['password'] = getenv('database.default.password');
-        $this->default['database'] = getenv('database.default.database');
-        $this->default['DBDriver'] = getenv('database.default.DBDriver') ?? (getenv('CI_ENVIRONMENT') !== 'production' ? 'MySQLi' : 'Postgre');
+        $this->default['hostname'] = getenv('DB_HOST');
+        $this->default['username'] = getenv('DB_USERNAME');
+        $this->default['password'] = getenv('DB_PASSWORD');
+        $this->default['database'] = getenv('DB_NAME');
+        $this->default['DBDriver'] = getenv('DB_DRIVER') ?? 'Postgre';
         $this->default['DBDebug'] = (getenv('CI_ENVIRONMENT') !== 'production');
-        $this->default['port'] = getenv('database.default.port');
+        $this->default['port'] = getenv('DB_PORT');
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
