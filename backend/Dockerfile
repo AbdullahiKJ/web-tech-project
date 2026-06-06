@@ -16,13 +16,19 @@ RUN a2enmod rewrite
 
 COPY . /var/www/html
 
+RUN mkdir -p /var/www/html/writable/cache
+RUN mkdir -p /var/www/html/writable/logs
+RUN mkdir -p /var/www/html/writable/session
+
+RUN chown -R www-data:www-data /var/www/html/writable
+RUN chmod -R 775 /var/www/html/writable
+
 WORKDIR /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-dev --optimize-autoloader
 
-# Make Apache serve CodeIgniter's public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
