@@ -7,6 +7,8 @@ use CodeIgniter\Model;
 class ReviewModel extends Model
 {
     protected $table = 'reviews';
+    protected $primaryKey = 'id';
+    protected $useAutoIncrement = false;
     protected $allowedFields = ['id', 'movie_id', 'rating', 'review_description', 'user_id'];
 
     public function getReviews($slug = false, $type = 1)
