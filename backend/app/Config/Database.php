@@ -201,6 +201,7 @@ class Database extends Config
         $this->default['DBDriver'] = getenv('DB_DRIVER') ?? 'Postgre';
         $this->default['DBDebug'] = (getenv('CI_ENVIRONMENT') !== 'production');
         $this->default['port'] = getenv('DB_PORT');
+        $this->default['encrypt'] = ['sslmode' => 'require'];
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
