@@ -14,6 +14,9 @@ $routes->post('/auth/logout', 'Auth::logout');
 $routes->get('/auth/timeout', 'Auth::timeout');
 $routes->get('/auth', 'Auth::me');
 
+$routes->post('/auth/forgot-password', 'PasswordReset::requestLink');
+$routes->post('/auth/reset-password', 'PasswordReset::resetPassword');
+
 // User Routes
 $routes->post('/users', 'Users::create');
 $routes->get('/users/(:segment)', 'Users::showUser/$1');
