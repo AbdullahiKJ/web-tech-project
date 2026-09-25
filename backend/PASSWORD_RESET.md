@@ -22,14 +22,14 @@ Add the following settings to your backend `.env`, using your actual mail provid
 
 ```ini
 PASSWORD_RESET_URL = 'http://localhost:3000/reset-password'
-email.protocol = smtp
-email.fromEmail = 'no-reply@example.com'
-email.fromName = 'Movie Reviews'
-email.SMTPHost = 'smtp.example.com'
-email.SMTPUser = 'your-smtp-user'
-email.SMTPPass = 'your-smtp-password'
-email.SMTPPort = 587
-email.SMTPCrypto = tls
+EMAIL_PROTOCOL = smtp
+EMAIL_FROM_ADDRESS = 'no-reply@example.com'
+EMAIL_FROM_NAME = 'Movie Reviews'
+SMTP_HOST = 'smtp.example.com'
+SMTP_USERNAME = 'your-smtp-user'
+SMTP_PASSWORD = 'your-smtp-password'
+SMTP_PORT = 587
+SMTP_ENCRYPTION = tls
 ```
 
 Use your HTTPS frontend URL in production. Keep `NEXT_PUBLIC_API_URL` in the frontend pointing to the backend as for sign-in. Configure a persistent shared cache for CodeIgniter's throttler when running multiple backend instances; do not use the dummy cache handler.
@@ -40,3 +40,5 @@ Use your HTTPS frontend URL in production. Keep `NEXT_PUBLIC_API_URL` in the fro
 Links expire after 30 minutes. Only SHA-256 token hashes are stored. Tokens are consumed transactionally and bound to the current password hash, so a password change invalidates existing links. Resetting does not automatically sign in the user. Existing signed-in sessions are not revoked by the current session system.
 
 Verify with a test account and mail inbox: request a link, reset its password, sign in with the new password, then check that reusing the link and submitting an expired link fail. The existing forgot-password link on the sign-in page opens the new page.
+
+On Render, add these uppercase keys to the backend service environment and deploy. These explicitly override the legacy `email.*` / `email_*` configuration variables. For Brevo use `SMTP_HOST=smtp-relay.brevo.com`, `SMTP_PORT=2525`, `SMTP_ENCRYPTION=tls`, and your Brevo SMTP login and SMTP key. Keep `PASSWORD_RESET_URL` pointing to the deployed frontend reset page.
