@@ -37,9 +37,21 @@ class PasswordReset extends ResourceController
 
         $base = rtrim((string) env('PASSWORD_RESET_URL', ''), '/');
         $emailConfig = config('Email');
-        if (!filter_var($base, FILTER_VALIDATE_URL) || !preg_match('#^https?://#', $base)
-            || !filter_var($emailConfig->fromEmail, FILTER_VALIDATE_EMAIL)) {
-            log_message('error', 'Password reset URL or sender email is not configured.');
+        $urlValid = filter_var($base, FILTER_VALIDATE_URL) !== false
+            && preg_match('#^https?://#', $base) === 1;
+        $senderValid = filter_var($emailConfig->fromEmail, FILTER_VALIDATE_EMAIL) !== false;
+        if (!$urlValid || !$senderValid) {
+            // Log only status flags: never addresses, URLs, reset tokens or SMTP credentials.
+            $diagnostics = [
+                'PASSWORD_RESET_URL' => $base === '' ? 'missing_or_empty' : ($urlValid ? 'valid' : 'invalid'),
+                'Email.fromEmail' => $emailConfig->fromEmail === '' ? 'missing_or_empty' : ($senderValid ? 'valid' : 'invalid'),
+                'email_fromEmail_env_present' => env('email_fromEmail') !== null,
+                'email.fromEmail_env_present' => env('email.fromEmail') !== null,
+            ];
+            $message = 'Password reset configuration check failed: ' . json_encode($diagnostics);
+            log_message('error', $message);
+            // The Docker Apache/PHP error stream is visible in Render's service logs.
+            error_log($message);
             return $this->failServerError('Password reset is temporarily unavailable.');
         }
 
