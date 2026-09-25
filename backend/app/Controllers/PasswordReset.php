@@ -9,6 +9,12 @@ class PasswordReset extends ResourceController
 {
     private const MESSAGE = 'If an account exists with that email, a password reset link will be sent.';
 
+    private function deliveryLog(string $event, array $details = []): void
+    {
+        // Only pass fixed event names, status flags and numeric SMTP codes here.
+        error_log('Password reset delivery: ' . json_encode(['event' => $event] + $details));
+    }
+
     private function payload(): array
     {
         try {
@@ -32,6 +38,7 @@ class PasswordReset extends ResourceController
             return $this->fail('Too many requests. Please try again later.', 429);
         }
         if (!$throttler->check('reset-email-' . hash('sha256', strtolower($address)), 1, 60)) {
+            $this->deliveryLog('email_rate_limited');
             return $this->respond(['message' => self::MESSAGE]);
         }
 
@@ -61,6 +68,7 @@ class PasswordReset extends ResourceController
             $db = db_connect();
             $token = bin2hex(random_bytes(32));
             $hash = hash('sha256', $token);
+            $stage = 'token_storage';
             try {
                 $db->table('password_resets')->where('expires_at <=', time())->delete();
                 $saved = $db->table('password_resets')->insert([
@@ -73,6 +81,15 @@ class PasswordReset extends ResourceController
                 if (!$saved) {
                     throw new \RuntimeException('Could not save reset token.');
                 }
+                $stage = 'email_setup';
+                $this->deliveryLog('token_stored', [
+                    'smtp_enabled' => $emailConfig->protocol === 'smtp',
+                    'smtp_host_present' => $emailConfig->SMTPHost !== '',
+                    'smtp_username_present' => $emailConfig->SMTPUser !== '',
+                    'smtp_password_present' => $emailConfig->SMTPPass !== '',
+                    'smtp_port' => $emailConfig->SMTPPort,
+                    'tls_enabled' => $emailConfig->SMTPCrypto === 'tls',
+                ]);
                 $mail = service('email');
                 $mail->clear(true);
                 $mail->setFrom($emailConfig->fromEmail, $emailConfig->fromName);
@@ -83,13 +100,32 @@ class PasswordReset extends ResourceController
                 $mail->setMessage("Reset your password using this link (expires in 30 minutes):\n\n"
                     . $base . '#token=' . $token
                     . "\n\nIf you did not request this, you can ignore this email.");
+                $stage = 'email_send';
                 if (!$mail->send()) {
+                    // Extract only SMTP status codes; never log the SMTP transcript,
+                    // which can contain recipient addresses or authentication details.
+                    preg_match_all('/\b([245][0-9]{2})[ -]/', strip_tags($mail->printDebugger([])), $matches);
+                    $this->deliveryLog('transport_rejected', [
+                        'smtp_codes' => array_values(array_unique($matches[1])),
+                    ]);
                     throw new \RuntimeException('Could not send reset email.');
                 }
+                $this->deliveryLog('transport_accepted');
             } catch (\Throwable $e) {
-                $db->table('password_resets')->where('token_hash', $hash)->delete();
+                $this->deliveryLog('failed', ['stage' => $stage]);
+                try {
+                    if (!$db->table('password_resets')->where('token_hash', $hash)->delete()) {
+                        $this->deliveryLog('token_cleanup_failed');
+                    }
+                } catch (\Throwable $cleanupError) {
+                    $this->deliveryLog('token_cleanup_failed');
+                }
                 log_message('error', 'Password reset delivery failed.');
             }
+        }
+
+        if (!$user) {
+            $this->deliveryLog('account_not_found');
         }
 
         // Do not reveal whether the address is registered, including delivery failures.
