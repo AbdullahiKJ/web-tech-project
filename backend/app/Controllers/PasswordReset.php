@@ -45,6 +45,7 @@ class PasswordReset extends ResourceController
             $diagnostics = [
                 'PASSWORD_RESET_URL' => $base === '' ? 'missing_or_empty' : ($urlValid ? 'valid' : 'invalid'),
                 'Email.fromEmail' => $emailConfig->fromEmail === '' ? 'missing_or_empty' : ($senderValid ? 'valid' : 'invalid'),
+                'EMAIL_FROM_ADDRESS_env_present' => env('EMAIL_FROM_ADDRESS') !== null,
                 'email_fromEmail_env_present' => env('email_fromEmail') !== null,
                 'email.fromEmail_env_present' => env('email.fromEmail') !== null,
             ];

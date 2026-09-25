@@ -123,4 +123,30 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+    /**
+     * Explicit hosting variables override CodeIgniter's standard email.* settings.
+     * Keep credentials in the backend environment, never in source control.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $variables = [
+            'EMAIL_PROTOCOL' => 'protocol',
+            'EMAIL_FROM_ADDRESS' => 'fromEmail',
+            'EMAIL_FROM_NAME' => 'fromName',
+            'SMTP_HOST' => 'SMTPHost',
+            'SMTP_USERNAME' => 'SMTPUser',
+            'SMTP_PASSWORD' => 'SMTPPass',
+            'SMTP_PORT' => 'SMTPPort',
+            'SMTP_ENCRYPTION' => 'SMTPCrypto',
+        ];
+
+        foreach ($variables as $variable => $property) {
+            $value = env($variable);
+            if ($value !== null) {
+                $this->{$property} = $property === 'SMTPPort' ? (int) $value : (string) $value;
+            }
+        }
+    }
 }
